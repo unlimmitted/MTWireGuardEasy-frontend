@@ -1,0 +1,24 @@
+{
+  "name": "wgwm-front",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 8080",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.5.0",
+    "qrcode.vue": "^3.4.1",
+    "vue": "^3.3.4",
+    "vue-cookie": "^1.1.4",
+    "vue-cookies": "^1.8.3",
+    "vue-easysession": "^0.0.13",
+    "vue-router": "^4.2.5",
+    "vue-session": "^1.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.4.0",
+    "vite": "^4.4.11"
+  }
+}
