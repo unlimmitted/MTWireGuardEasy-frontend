@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 8080",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "http-server dist"
   },
   "dependencies": {
     "@vueuse/core": "^10.5.0",
+    "http-server": "^14.1.1",
     "qrcode.vue": "^3.4.1",
     "vue": "^3.3.4",
     "vue-cookie": "^1.1.4",
