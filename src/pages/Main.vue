@@ -10,7 +10,7 @@
       <div class="inner cover bigContainer">
         <clientForm @createPeer="addPeer"/>
         <div class="container">
-          <clientsList @deletePeer="deletePeer" @changeRoutVpn="changeVpnRoute" :wgPeers="wgPeers"/>
+          <clientsList @deletePeer="deletePeer" @changeRoutVpn="changeVpnRoute" :wgPeers="wgPeers" :serverUrl="serverUrl"/>
         </div>
       </div>
     </div>

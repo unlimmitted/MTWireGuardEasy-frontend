@@ -51,6 +51,7 @@
       <div class="modal__container">
         <qrcode-vue class="qrView" @click="closeQR()" :value="qrValue" :size="250" level="H"/>
       </div>
+      <button type="submit" class="btn btn-success downloadBtn" @click="downloadConfig()">Download Config</button>
     </div>
   </div>
 </template>
@@ -61,14 +62,15 @@ import BootstrapQR from "@/components/UI/bootstrapQR.vue";
 
 export default {
   name: 'clientsList',
-  props: ['wgPeers'],
+  props: ['wgPeers', 'serverUrl'],
   components: {
     BootstrapQR,
     QrcodeVue,
   },
   data() {
     return {
-      qrValue: ``,
+      qrValue: '',
+      peerComment: ''
     }
   },
   methods: {
@@ -89,6 +91,7 @@ export default {
       modalElm.style.display = 'none'
     },
     showQR(index) {
+      this.peerComment = this.wgPeers[index].comment.split('\n')[0]
       const modalElm = document.querySelector('.modal')
       this.qrValue = `
       [Interface]
@@ -107,6 +110,22 @@ export default {
       modalElm.style.display = 'flex'
       modalElm.style.visibility = 'visible'
       modalElm.opacity = 1
+    },
+
+    async downloadConfig() {
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", this.serverUrl + "/api/v1/download-config", true)
+      xhr.responseType = "blob"
+      xhr.setRequestHeader('Content-Type', 'application/json')
+      xhr.setRequestHeader('charset', 'utf-8')
+      xhr.onload = () => {
+        let blob = xhr.response
+        let link = document.createElement('a')
+        link.href=window.URL.createObjectURL(blob)
+        link.download=this.peerComment + '.conf'
+        link.click()
+      }
+      xhr.send(JSON.stringify({"value": this.qrValue}));
     },
   },
 }
@@ -137,7 +156,7 @@ export default {
   border-radius: 16px;
   padding-left: 30px;
   padding-right: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
 
 }
 
