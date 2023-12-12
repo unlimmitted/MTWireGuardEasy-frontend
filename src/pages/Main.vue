@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      serverUrl: '',
+      serverUrl: 'http://192.168.0.102:5000',
       errors: [],
       wgPeers: [],
       authErrors: ""
