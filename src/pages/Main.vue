@@ -39,7 +39,6 @@ export default {
   },
   data() {
     return {
-      serverUrl: 'http://192.168.0.102:8000',
       errors: [],
       wgPeers: [],
       authErrors: ""
@@ -51,25 +50,25 @@ export default {
   methods: {
     async tryMtConnect(body) {
       await this.sendRequest("POST",
-          `${this.serverUrl}/api/v1/try-connect?host=${body.host}&username=${body.username}&password=${body.password}`)
+          `/api/v1/try-connect?host=${body.host}&username=${body.username}&password=${body.password}`)
       this.getPeers()
     },
     getPeers() {
-      this.sendRequest("POST", `${this.serverUrl}/api/v1/peers`,
+      this.sendRequest("POST", `/api/v1/peers`,
           {token: this.$cookies.get("session")})
     },
     sendSettings(settings) {
-      this.sendRequest("POST", `${this.serverUrl}/api/v1/set-settings`, settings)
+      this.sendRequest("POST", `/api/v1/set-settings`, settings)
     },
     deleteError(index) {
-      this.sendRequest("DELETE", `${this.serverUrl}/api/v1/del-error`,
+      this.sendRequest("DELETE", `/api/v1/del-error`,
           {
             id: index,
             token: this.$cookies.get("session")
           })
     },
     changeVpnRoute(routVpnProperty) {
-      this.sendRequest('POST', `${this.serverUrl}/api/v1/change_vpn_rout`,
+      this.sendRequest('POST', `/api/v1/change_vpn_rout`,
           {
             status: routVpnProperty.status,
             id: routVpnProperty.id,
@@ -77,10 +76,10 @@ export default {
           })
     },
     addPeer(new_peer) {
-      this.sendRequest('POST', `${this.serverUrl}/api/v1/add-peer`, new_peer)
+      this.sendRequest('POST', `/api/v1/add-peer`, new_peer)
     },
     deletePeer(clientID) {
-      this.sendRequest('DELETE', `${this.serverUrl}/api/v1/del-peer`,
+      this.sendRequest('DELETE', `/api/v1/del-peer`,
           {
             id: clientID,
             token: this.$cookies.get("session")
@@ -104,7 +103,7 @@ export default {
 
           if (xhr.status === 401) {
             if (this.$cookies.get("session") !== null){
-              this.authErrors = xhr.response["detail"]
+              console.log(xhr.status)
             }
             loginForm.style.visibility = "visible"
             root.style.visibility = "hidden"
@@ -125,11 +124,14 @@ export default {
             if (this.$cookies.get("session") !== null) {
 
               if (xhr.response["setting_status"] === true) {
+
                 loginForm.style.visibility = 'hidden'
                 root.style.visibility = 'visible'
                 settingsForm.style.visibility = 'hidden'
                 settingsForm.style.position = 'absolute'
+
               } else if (xhr.response["setting_status"] === false) {
+
                 loginForm.style.visibility = 'hidden'
                 root.style.visibility = 'hidden'
                 settingsForm.style.visibility = 'visible'
