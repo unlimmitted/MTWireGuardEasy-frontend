@@ -1,50 +1,52 @@
 <template>
-  <table class="table table-bordered myTable">
-    <thead>
-    <tr>
-      <th scope="col">№</th>
-      <th scope="col">Name</th>
-      <th scope="col">IP address</th>
-      <th scope="col">VPN</th>
-      <th scope="col">QR</th>
-      <th scope="col">Delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="(client, index) in wgPeers"
-        :key="client.id">
-      <th scope="row">{{ index + 1 }}</th>
-      <td>{{ client.comment.split('\n')[0] }}</td>
-      <td>{{ client["allowed-address"] }}</td>
-      <td>
-        <div v-if="client['double-vpn']">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" @click="changeDoubleVpn(index)" :id="index" checked>
-            <label class="form-check-label" :for="index"></label>
+  <div class="peers">
+    <table class="table table-bordered myTable">
+      <thead>
+      <tr>
+        <th scope="col">№</th>
+        <th scope="col">Name</th>
+        <th scope="col">IP address</th>
+        <th scope="col">VPN</th>
+        <th scope="col">QR</th>
+        <th scope="col">Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(client, index) in wgPeers"
+          :key="client.id">
+        <th scope="row">{{ index + 1 }}</th>
+        <td>{{ client.comment.split('\n')[0] }}</td>
+        <td>{{ client["allowed-address"] }}</td>
+        <td>
+          <div v-if="client['double-vpn']">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" @click="changeDoubleVpn(index)" :id="index" checked>
+              <label class="form-check-label" :for="index"></label>
+            </div>
           </div>
-        </div>
-        <div v-else>
-          <div class="form-check form-switch">
-            <input class="form-check-input" @click="changeDoubleVpn(index)" type="checkbox" :id="index">
-            <label class="form-check-label" :for="index"></label>
+          <div v-else>
+            <div class="form-check form-switch">
+              <input class="form-check-input" @click="changeDoubleVpn(index)" type="checkbox" :id="index">
+              <label class="form-check-label" :for="index"></label>
+            </div>
           </div>
-        </div>
-      </td>
-      <td>
-        <button :data-index="index"
-                @click="showQR(index)" data-type="showQR" type="submit" id="showQR" class="btn btn-success">
-          <bootstrap-q-r class="qrIcon"/>
-        </button>
-      </td>
-      <td>
-        <button :data-index="index"
-                @click="deletePeer(index)" data-type="remove" type="submit" id="remove"
-                class="btn btn-danger">&times;
-        </button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+        </td>
+        <td>
+          <button :data-index="index"
+                  @click="showQR(index)" data-type="showQR" type="submit" id="showQR" class="btn btn-success">
+            <bootstrap-q-r class="qrIcon"/>
+          </button>
+        </td>
+        <td>
+          <button :data-index="index"
+                  @click="deletePeer(index)" data-type="remove" type="submit" id="remove"
+                  class="btn btn-danger">&times;
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="modal">
     <div class="modal__main">
       <h2 class="modal__title"></h2>
@@ -165,13 +167,16 @@ export default {
 }
 
 @media (max-width: 430px) and (max-height: 932px) {
+  .peers {
+    font-size: 20%;
+  }
 
   .modal__main {
     margin-top: 30%;
   }
 
   .myTable {
-    margin-left: 2.5%;
+    margin-left: 2%;
     font-size: 13px;
     width: 100px;
   }

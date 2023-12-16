@@ -63,7 +63,7 @@ export default {
     width: 377px;
   }
   .lead {
-    padding-left: 2.5%;
+    padding-left: 0;
   }
 }
 

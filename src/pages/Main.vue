@@ -153,11 +153,6 @@ export default {
   margin-top: 20px;
 }
 
-.bigContainer {
-  padding-left: 30%;
-  padding-right: 30%;
-}
-
 .loginForm {
   visibility: hidden;
 }
@@ -172,7 +167,7 @@ export default {
 
 @media (max-width: 430px) and (max-height: 932px) {
   .bigContainer {
-    padding-left: 2%;
+    padding-left: 0;
     padding-right: 0;
   }
 
