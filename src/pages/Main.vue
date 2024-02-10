@@ -1,21 +1,29 @@
 <template>
   <div class="loginForm">
-    <loginForm @tryMtConnect="tryMtConnect" :authErrors="authErrors"/>
+    <loginForm
+        @tryMtConnect="tryMtConnect"
+        :authErrors="authErrors"/>
   </div>
   <div class="settingsForm">
-    <settings-form @sendMtSettings="sendSettings"/>
+    <settings-form
+        @sendMtSettings="sendSettings"/>
   </div>
   <div class="root">
     <div class="text-center">
       <div class="inner cover bigContainer">
         <clientForm @createPeer="addPeer"/>
         <div class="container">
-          <clientsList @deletePeer="deletePeer" @changeRoutVpn="changeVpnRoute" :wgPeers="wgPeers" :serverUrl="serverUrl"/>
+          <clientsList
+              @deletePeer="deletePeer"
+              @changeRoutVpn="changeVpnRoute"
+              :wgPeers="wgPeers"/>
         </div>
       </div>
     </div>
   </div>
-  <error @deleteError="deleteError" :errors="errors"/>
+  <error
+      @deleteError="deleteError"
+      :errors="errors"/>
 </template>
 
 <script>
@@ -25,7 +33,6 @@ import QrcodeVue from "qrcode.vue";
 import clientForm from "@/components/clientForm.vue";
 import clientsList from "@/components/clientsList.vue";
 import SettingsForm from "@/components/settingsForm.vue";
-import error from "@/components/error.vue";
 
 export default {
   name: 'Main',
