@@ -20,26 +20,34 @@
         <td>
           <div v-if="client['double-vpn']">
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" @click="changeDoubleVpn(index)" :id="index" checked>
-              <label class="form-check-label" :for="index"></label>
+              <input class="form-check-input" type="checkbox" 
+                     @click="changeDoubleVpn(index)" 
+                     :id="index" checked>
+              <label class="form-check-label" 
+                     :for="index"></label>
             </div>
           </div>
           <div v-else>
             <div class="form-check form-switch">
-              <input class="form-check-input" @click="changeDoubleVpn(index)" type="checkbox" :id="index">
-              <label class="form-check-label" :for="index"></label>
+              <input class="form-check-input" 
+                     @click="changeDoubleVpn(index)" type="checkbox" 
+                     :id="index">
+              <label class="form-check-label" 
+                     :for="index"></label>
             </div>
           </div>
         </td>
         <td>
           <button :data-index="index"
-                  @click="showQR(index)" data-type="showQR" type="submit" id="showQR" class="btn btn-success">
+                  @click="showQR(index)" 
+                  data-type="showQR" type="submit" id="showQR" class="btn btn-success">
             <bootstrap-q-r class="qrIcon"/>
           </button>
         </td>
         <td>
           <button :data-index="index"
-                  @click="deletePeer(index)" data-type="remove" type="submit" id="remove"
+                  @click="deletePeer(index)" 
+                  data-type="remove" type="submit" id="remove"
                   class="btn btn-danger">&times;
           </button>
         </td>
@@ -51,9 +59,13 @@
     <div class="modal__main">
       <h2 class="modal__title"></h2>
       <div class="modal__container">
-        <qrcode-vue class="qrView" @click="closeQR()" :value="qrValue" :size="250" level="H"/>
+        <qrcode-vue class="qrView" 
+                    @click="closeQR()" 
+                    :value="qrValue" 
+                    :size="250" level="H"/>
       </div>
-      <button type="submit" class="btn btn-success downloadBtn" @click="downloadConfig()">Download Config</button>
+      <button type="submit" class="btn btn-success downloadBtn" 
+              @click="downloadConfig()">Download Config</button>
     </div>
   </div>
 </template>
@@ -64,7 +76,7 @@ import BootstrapQR from "@/components/UI/bootstrapQR.vue";
 
 export default {
   name: 'clientsList',
-  props: ['wgPeers', 'serverUrl'],
+  props: ['wgPeers'],
   components: {
     BootstrapQR,
     QrcodeVue,
@@ -116,7 +128,7 @@ export default {
 
     async downloadConfig() {
       let xhr = new XMLHttpRequest();
-      xhr.open("POST", this.serverUrl + "/api/v1/download-config", true)
+      xhr.open("POST", "/api/v1/download-config", true)
       xhr.responseType = "blob"
       xhr.setRequestHeader('Content-Type', 'application/json')
       xhr.setRequestHeader('charset', 'utf-8')
