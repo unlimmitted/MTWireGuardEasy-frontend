@@ -1,25 +1,26 @@
 {
-  "name": "wgwm-front",
-  "version": "0.0.0",
+  "name": "mtwireguardeasy-frontend",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 5000",
+    "dev": "vite",
     "build": "vite build",
-    "preview": "http-server dist"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@vueuse/core": "^10.5.0",
-    "http-server": "^14.1.1",
+    "@quasar/extras": "^1.16.12",
+    "axios": "^1.7.5",
+    "pinia": "^2.1.7",
     "qrcode.vue": "^3.4.1",
-    "vue": "^3.3.4",
-    "vue-cookie": "^1.1.4",
-    "vue-cookies": "^1.8.3",
-    "vue-easysession": "^0.0.13",
-    "vue-router": "^4.2.5",
-    "vue-session": "^1.0.0"
+    "quasar": "^2.16.9",
+    "vue": "^3.4.38",
+    "vue-router": "^4.4.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.4.0",
-    "vite": "^4.4.11"
+    "@quasar/vite-plugin": "^1.7.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "sass": "^1.33.0",
+    "vite": "^5.4.2"
   }
 }

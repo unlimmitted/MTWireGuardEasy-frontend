@@ -1,8 +1,22 @@
 import {createApp} from 'vue'
+import {Notify, Quasar} from 'quasar'
+
+import '@quasar/extras/material-icons/material-icons.css'
+
+import 'quasar/src/css/index.sass'
+
 import App from './App.vue'
-import VueCookies from 'vue-cookies';
+import router from "./router.js";
+import {createPinia} from "pinia";
 
-const app = createApp(App)
+const pinia = createPinia()
 
-app.use(VueCookies)
-    .mount('#app')
+const myApp = createApp(App).use(router).use(pinia)
+
+myApp.use(Quasar, {
+	plugins: {
+		Notify
+	},
+})
+
+myApp.mount('#app')

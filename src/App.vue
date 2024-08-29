@@ -1,18 +1,19 @@
 <template>
-  <div id="app">
-   <Main/>
-  </div>
+  <MainLayout/>
 </template>
 
 <script>
-import Main from "@/pages/Main.vue";
-
+import MainLayout from "./layouts/MainLayout.vue";
+import {useStore} from "./store.js";
 export default {
-  components: {Main}
-
+	components: {MainLayout},
+	setup() {
+		const store = useStore()
+		return { store }
+	}
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>
