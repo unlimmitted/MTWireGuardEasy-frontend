@@ -110,8 +110,9 @@ export default {
 			axios.post('/api/v1/change-routing-vpn', body)
 				.then(() => {
 					this.store.fetchData()
+					const peer = this.store.tableData.find((peer) => peer.id === body.id)
 					this.$q.notify({
-						message: body.status ? 'Double VPN OFF' : 'Double VPN ON',
+						message: peer.doubleVpn ? 'Double VPN OFF' : 'Double VPN ON',
 						type: 'positive',
 						position: 'top-right',
 						actions: [{

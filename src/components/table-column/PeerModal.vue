@@ -103,7 +103,7 @@ export default {
 			this.$emit('deletePeer', this.peerDetails)
 		},
 		changeDoubleVpn() {
-			this.$emit('doubleVpn', this.peerDetails)
+			this.$emit('doubleVpn', this.peerDetails, this.doubleVpn)
 		}
 	},
 	created() {

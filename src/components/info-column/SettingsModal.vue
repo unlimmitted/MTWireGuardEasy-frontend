@@ -117,17 +117,6 @@
 				label="Local WAN Interface name"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
-<!--			{{ this.store.settings.localWgEndpoint }}-->
-<!--			{{ this.store.settings.localWgEndpointPort }}-->
-<!--			{{ this.store.settings.localNetwork }}-->
-<!--			{{ this.store.settings.ipAddress }}-->
-<!--			{{ this.store.settings.allowedAddress }}-->
-<!--			{{ this.store.settings.endpoint }}-->
-<!--			{{ this.store.settings.endpointPort }}-->
-<!--			{{ this.store.settings.publicKey }}-->
-<!--			{{ this.store.settings.privateKey }}-->
-<!--			{{ this.store.settings.wanInterfaceName }}-->
-<!--			{{ this.store.settings.presharedKey }}-->
 		</q-card-section>
 		<q-card-actions>
 
