@@ -34,8 +34,7 @@ export default {
 	methods: {
 		createPeer () {
 			if (this.wgPeerName) {
-				const body = {comment: this.wgPeerName, token: this.store.token}
-				axios.post("http://localhost:5000/api/v1/add-peer", body).then(() => {
+				axios.post("/api/v1/create-new-peer", this.wgPeerName).then(() => {
 					this.wgPeerName = ''
 					this.store.fetchData()
 					this.$q.notify({

@@ -32,7 +32,8 @@
 				>
 					Copy config text
 				</q-btn>
-				<div style="display: flex; flex-direction: row;align-items: center;margin-top: 8px;justify-content: center;">
+				<div
+					style="display: flex; flex-direction: row;align-items: center;margin-top: 8px;justify-content: center;">
 					Double VPN
 					<q-toggle
 						v-model="this.doubleVpn"
@@ -69,6 +70,7 @@
 
 import QrcodeVue from "qrcode.vue";
 import {useStore} from "../../store.js";
+
 export default {
 	components: {QrcodeVue},
 	props: ['peerConfig', 'peerDetails'],
@@ -97,23 +99,19 @@ export default {
 				}]
 			})
 		},
-		deletePeer () {
-			this.$emit('deletePeer',{
-				id: this.peerDetails.id,
-				token: this.store.token
-			})
+		deletePeer() {
+			this.$emit('deletePeer', this.peerDetails)
 		},
 		changeDoubleVpn() {
-			const body = {status: !this.doubleVpn, id: this.peerDetails.id, token: this.store.token}
-			this.$emit('doubleVpn', body)
+			this.$emit('doubleVpn', this.peerDetails)
 		}
 	},
 	created() {
-		this.doubleVpn = this.peerDetails['double-vpn']
+		this.doubleVpn = this.peerDetails.doubleVpn
 	},
 	setup() {
 		const store = useStore()
-		return { store }
+		return {store}
 	}
 }
 </script>

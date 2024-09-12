@@ -79,22 +79,21 @@ export default {
 			this.peerDetails = row
 			this.peerConfig = `
 			  [Interface]
-			  PrivateKey = ${row.comment.split('\n')[1]}
-			  Address = ${row["allowed-address"]}
+			  PrivateKey = ${row.privateKey}
+			  Address = ${row.allowedAddress}
 			  DNS = 1.1.1.1
 			  MTU = 1400
 			  [Peer]
-			  PublicKey = ${row["server-public-key"]}
+			  PublicKey = ${row.publicKey}
 			  AllowedIPs = 0.0.0.0/0, ::/0
-			  Endpoint = ${row["endpoint-address"]}:${row["endpoint-port"]}
+			  Endpoint = ${this.store.settings.localWgEndpoint}:${this.store.settings.localWgEndpointPort}
 			  PersistentKeepalive = 0`
 		},
 		closeModal() {
 			this.showPeerDetails = false
 		},
 		deletePeer(peer) {
-			const body = {id: peer.id, token: peer.token}
-			axios.post('http://localhost:5000/api/v1/del-peer', body).then(() => {
+			axios.post('/api/v1/remove-peer', peer).then(() => {
 				this.store.fetchData()
 				this.closeModal()
 				this.$q.notify({
@@ -108,7 +107,7 @@ export default {
 			})
 		},
 		doubleVpnChange(body){
-			axios.post('http://localhost:5000/api/v1/change_vpn_rout', body)
+			axios.post('/api/v1/change-routing-vpn', body)
 				.then(() => {
 					this.store.fetchData()
 					this.$q.notify({

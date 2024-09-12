@@ -4,6 +4,15 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: `js/[name].js`,
+        chunkFileNames: `js/[name].js`,
+        assetFileNames: `css/[name].[ext]`
+      }
+    }
+  },
   plugins: [
     vue({
       template: { transformAssetUrls }

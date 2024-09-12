@@ -11,7 +11,7 @@
 				</tr>
 				<tr>
 					<th>OS version:</th>
-					<th class="col-value">{{ this.store.serverData.osVersion }}</th>
+					<th class="col-value">{{ this.store.serverData.version }}</th>
 				</tr>
 			</table>
 		</div>
@@ -26,7 +26,7 @@
 				</tr>
 				<tr>
 					<th>Port:</th>
-					<th class="col-value"> {{ int["listen-port"] }}</th>
+					<th class="col-value"> {{ int.listenPort }}</th>
 				</tr>
 				<tr>
 					<th>MTU:</th>

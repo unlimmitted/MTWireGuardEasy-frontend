@@ -15,14 +15,14 @@ export const useStore = defineStore('store', {
 				name: 'ip',
 				align: 'center',
 				label: 'IP Address',
-				field: 'allowed-address',
+				field: 'allowedAddress',
 				sortable: true
 			},
 			{
 				name: 'last-handshake',
 				align: 'center',
 				label: 'Last Handshake',
-				field: 'last-handshake',
+				field: 'lastHandshake',
 				sortable: true
 			},
 			{
@@ -41,26 +41,36 @@ export const useStore = defineStore('store', {
 				name: 'current-endpoint-address',
 				align: 'center',
 				label: 'Endpoint Address',
-				field: 'current-endpoint-address'
+				field: 'currentEndpointAddress'
 			}
 		],
 		tableData: [],
 		token: '',
-		serverData: {}
+		serverData: {},
+		settings: {}
 	}),
 	actions: {
 		fetchRouterInfo() {
-			axios.post('http://localhost:5000/api/v1/server-info', {token: this.token})
+			return axios.get('/api/v1/get-mikrotik-info')
 				.then(response => {
-					console.log(response.data)
 					this.serverData = response.data
 				})
 		},
 		fetchData() {
-			return axios.post('http://localhost:5000/api/v1/peers',
-				{token: this.token})
+			return axios.get('/api/v1/get-wg-peers')
 				.then(response => {
-					this.tableData = response.data.wg_peers
+					if (response.status === 200) {
+						this.tableData = response.data
+					} else if (response.status === 500){
+						this.$q.notify({
+							message: 'Fuck MikroTik API: Pls reload page',
+							type: 'negative',
+							position: 'top-right',
+							actions: [{
+								icon: 'close', color: 'white', dense: true, handler: () => undefined
+							}]
+						})
+					}
 				})
 		}
 	}
