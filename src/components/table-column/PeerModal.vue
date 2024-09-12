@@ -54,15 +54,15 @@
 
 			</div>
 		</q-card-section>
-		<q-card-actions>
-			<q-btn
-				style="width: 100%"
-				color="primary"
-				@click="this.$emit('closeModal')"
-			>
-				Close
-			</q-btn>
-		</q-card-actions>
+<!--		<q-card-actions>-->
+<!--			<q-btn-->
+<!--				style="width: 100%"-->
+<!--				color="primary"-->
+<!--				@click="this.$emit('closeModal')"-->
+<!--			>-->
+<!--				Close-->
+<!--			</q-btn>-->
+<!--		</q-card-actions>-->
 	</q-card>
 </template>
 

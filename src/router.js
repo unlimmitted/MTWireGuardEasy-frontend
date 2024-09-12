@@ -16,8 +16,11 @@ const router = createRouter({
 						.then(() => {
 							return store.fetchRouterInfo()
 						}).then(() => {
-						next()
+						return store.fetchRouterSettings()
 					})
+						.then(() => {
+							next()
+						})
 						.catch(() => {
 							next()
 						});

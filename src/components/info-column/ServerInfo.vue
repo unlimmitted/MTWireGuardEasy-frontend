@@ -18,7 +18,7 @@
 		<div class="server-info">
 			WG Interfaces
 		</div>
-		<div v-for="(int, index) in this.store.serverData['interfaces']">
+		<div v-for="(int, index) in this.store.serverData.interfaces">
 			<table>
 				<tr>
 					<th>Interface name:</th>
@@ -37,19 +37,35 @@
 					<th class="col-value">{{ int.running }}</th>
 				</tr>
 			</table>
-			<q-separator v-if="!(this.store.serverData['interfaces'].length - 1 === index)" style="margin: 8px 0 8px 0"/>
+			<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"
+						 style="margin: 8px 0 8px 0"/>
 		</div>
+		<q-btn
+			icon="settings"
+			style="width: 100%"
+			@click="this.settingsModal = !this.settingsModal"
+		>
+			Настройки
+		</q-btn>
 	</q-card>
+	<q-dialog v-model="settingsModal">
+		<settings-modal/>
+	</q-dialog>
 </template>
 
 <script>
 
 import {useStore} from "../../store.js";
+import SettingsModal from "./SettingsModal.vue";
 
 export default {
+	components: {SettingsModal},
+	data: () => ({
+		settingsModal: false
+	}),
 	setup() {
 		const store = useStore()
-		return { store }
+		return {store}
 	}
 }
 
@@ -59,15 +75,18 @@ export default {
 .infoBox {
 	padding: 8px;
 }
+
 .server-info {
 	font-size: 1.25rem;
 }
+
 th {
 	white-space: nowrap;
 	color: rgba(108, 108, 108, 1);
 	font-weight: 520;
 	text-align: start;
 }
+
 .col-value {
 	color: rgba(36, 36, 36, 1);
 }

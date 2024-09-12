@@ -11,7 +11,7 @@
 		</div>
 		<div
 			class="tableColumn"
-			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;margin-top: 0;': ''"
+			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;margin-top: 0;padding-left: 20px;': ''"
 		>
 			<table-column/>
 		</div>

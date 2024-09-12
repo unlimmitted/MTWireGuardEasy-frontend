@@ -56,6 +56,12 @@ export const useStore = defineStore('store', {
 					this.serverData = response.data
 				})
 		},
+		fetchRouterSettings() {
+			return axios.get('/api/v1/get-mikrotik-settings')
+				.then(response => {
+					this.settings = response.data
+				})
+		},
 		fetchData() {
 			return axios.get('/api/v1/get-wg-peers')
 				.then(response => {
