@@ -19,7 +19,6 @@
 			<q-input
 				id="task-name"
 				v-model="this.localWgInterfaceName"
-				ref="taskName"
 				readonly
 				label="Local WireGuard Interface name"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
@@ -27,7 +26,6 @@
 			<q-input
 				id="task-name"
 				v-model="this.toVpnAddressList"
-				ref="taskName"
 				readonly
 				label="Address List for routing peers"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
@@ -35,7 +33,6 @@
 			<q-input
 				id="task-name"
 				v-model="this.localWgNetwork"
-				ref="taskName"
 				readonly
 				label="Local WireGuard Network"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
@@ -43,77 +40,66 @@
 			<q-input
 				id="task-name"
 				v-model="this.localWgEndpoint"
-				ref="taskName"
 				label="Local WireGuard Endpoint"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.localWgEndpointPort"
-				ref="taskName"
 				label="Local WireGuard Endpoint port"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.localNetwork"
-				ref="taskName"
 				label="Local network"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.ipAddress"
-				ref="taskName"
 				label="IP address of external WireGuard"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.allowedAddress"
-				ref="taskName"
 				label="Allowed Address"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.endpoint"
-				ref="taskName"
 				label="External WireGuard Endpoint"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.endpointPort"
-				ref="taskName"
 				label="External WireGuard Endpoint port"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.publicKey"
-				ref="taskName"
 				label="External WireGuard Public Key"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.presharedKey"
-				ref="taskName"
 				label="External WireGuard Preshared Key"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.privateKey"
-				ref="taskName"
 				label="External WireGuard Private Key"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.wanInterfaceName"
-				ref="taskName"
 				label="Local WAN Interface name"
 				:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
 			/>

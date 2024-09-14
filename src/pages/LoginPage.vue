@@ -15,14 +15,14 @@
 								id="task-name"
 								v-model="this.login"
 								label="Login"
-								:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
+								:rules="[val => (val && val.length > 0) || 'Required field']"
 							/>
 							<q-input
 								id="task-name"
 								v-model="this.password"
 								label="Password"
 								type="password"
-								:rules="[val => (val && val.length > 0) || 'Обязательное поле']"
+								:rules="[val => (val && val.length > 0) || 'Required field']"
 							/>
 						</q-card-section>
 						<q-card-actions>
@@ -59,6 +59,8 @@ export default {
 						if (res.data.authenticated) {
 							this.$router.push('/')
 						} else {
+							this.login = ''
+							this.password = ''
 							this.$q.notify({
 								message: 'Invalid login details',
 								type: 'negative',

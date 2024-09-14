@@ -32,20 +32,31 @@ export default {
 		wgPeerName: ''
 	}),
 	methods: {
-		createPeer () {
+		createPeer() {
 			if (this.wgPeerName) {
-				axios.post("/api/v1/create-new-peer", this.wgPeerName).then(() => {
-					this.wgPeerName = ''
-					this.store.fetchData()
+				if (!this.store.tableData.find(peer => peer.name === this.wgPeerName)) {
+					axios.post("/api/v1/create-new-peer", this.wgPeerName).then(() => {
+						this.wgPeerName = ''
+						this.store.fetchData()
+						this.$q.notify({
+							message: 'Peer successfully created',
+							type: 'positive',
+							position: 'top-right',
+							actions: [{
+								icon: 'close', color: 'white', dense: true, handler: () => undefined
+							}]
+						})
+					})
+				} else {
 					this.$q.notify({
-						message: 'Peer successfully created',
-						type: 'positive',
+						message: `"${this.wgPeerName}" name already exists`,
+						type: 'negative',
 						position: 'top-right',
 						actions: [{
 							icon: 'close', color: 'white', dense: true, handler: () => undefined
 						}]
 					})
-				})
+				}
 			} else {
 				this.$q.notify({
 					message: 'WG Peer name field is empty',
@@ -60,7 +71,7 @@ export default {
 	},
 	setup() {
 		const store = useStore()
-		return { store }
+		return {store}
 	}
 }
 </script>
@@ -72,6 +83,7 @@ export default {
 	overflow: hidden;
 	font-size: 1.8rem;
 }
+
 .createBox {
 	padding: 8px;
 	margin-bottom: 8px;
