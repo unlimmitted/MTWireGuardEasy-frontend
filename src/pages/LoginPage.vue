@@ -55,7 +55,6 @@ export default {
 			axios.post(`/auth/login?username=${this.login}&password=${this.password}`)
 				.then(() => {
 					axios.get("/auth/status").then(res => {
-						console.log(res.data.authenticated)
 						if (res.data.authenticated) {
 							this.$router.push('/')
 						} else {

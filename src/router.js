@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import ControlPanel from "./pages/ControlPanel.vue";
 import {useStore} from "./store.js";
 import LoginPage from "./pages/LoginPage.vue";
+import SettingsPage from "./pages/SettingsPage.vue";
 
 
 const router = createRouter({
@@ -33,6 +34,10 @@ const router = createRouter({
 		{
 			path: '/login',
 			component: LoginPage
+		},
+		{
+			path: '/settings',
+			component: SettingsPage
 		}
 	]
 });

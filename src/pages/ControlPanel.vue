@@ -22,6 +22,8 @@
 import TableColumn from "../components/TableColumn.vue";
 import InfoColumn from "../components/InfoColumn.vue";
 import axios from "axios";
+import {useRouter} from "vue-router";
+import {useStore} from "../store.js";
 
 export default {
 	components: {InfoColumn, TableColumn},
@@ -35,6 +37,16 @@ export default {
 		isMobile() {
 			return this.$q.screen.width < 1023
 		}
+	},
+	mounted() {
+		if (!this.store.settings) {
+			console.log(this.store.settings)
+			this.$router.push('/settings')
+		}
+	},
+	setup() {
+		const store = useStore()
+		return { store }
 	}
 }
 </script>
