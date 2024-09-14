@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import ControlPanel from "./pages/ControlPanel.vue";
 import {useStore} from "./store.js";
+import LoginPage from "./pages/LoginPage.vue";
 
 
 const router = createRouter({
@@ -28,6 +29,10 @@ const router = createRouter({
 					next()
 				}
 			}
+		},
+		{
+			path: '/login',
+			component: LoginPage
 		}
 	]
 });

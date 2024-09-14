@@ -40,13 +40,16 @@
 			<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"
 						 style="margin: 8px 0 8px 0"/>
 		</div>
-		<q-btn
-			icon="settings"
-			style="width: 100%"
-			@click="this.settingsModal = !this.settingsModal"
-		>
-			Настройки
-		</q-btn>
+		<div style="width: 100%;display: flex;flex-direction: row;flex-wrap: nowrap;">
+			<q-btn
+				icon="settings"
+				style="width: 100%;margin-right: 8px"
+				@click="this.settingsModal = !this.settingsModal"
+			>
+				Настройки
+			</q-btn>
+			<q-btn icon="logout" color="primary" @click="this.logout"/>
+		</div>
 	</q-card>
 	<q-dialog v-model="settingsModal">
 		<settings-modal/>
@@ -57,12 +60,24 @@
 
 import {useStore} from "../../store.js";
 import SettingsModal from "./SettingsModal.vue";
+import axios from "axios";
+import router from "../../router.js";
+import {useRoute} from "vue-router";
 
 export default {
 	components: {SettingsModal},
 	data: () => ({
 		settingsModal: false
 	}),
+	methods: {
+		logout() {
+			axios.post("/auth/logout")
+				.then(() => {
+						this.$router.push('/login')
+					}
+				)
+		}
+	},
 	setup() {
 		const store = useStore()
 		return {store}
