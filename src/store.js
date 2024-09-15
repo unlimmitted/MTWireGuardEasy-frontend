@@ -5,11 +5,10 @@ export const useStore = defineStore('store', {
 	state: () => ({
 		tableColumns: [
 			{
-				name: 'comment',
+				name: 'name',
 				label: 'Name',
 				align: 'center',
-				sortable: true,
-				field: row => row.comment.split('\n')[0]
+				sortable: true
 			},
 			{
 				name: 'ip',

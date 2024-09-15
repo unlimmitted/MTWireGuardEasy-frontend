@@ -1,7 +1,7 @@
 <template>
 	<q-card style="">
 		<q-toolbar class="justify-between">
-			Peer: {{ this.peerDetails.comment.split('\n')[0] }}
+			Peer: {{ this.peerDetails.name }}
 			<q-btn
 				flat
 				round
