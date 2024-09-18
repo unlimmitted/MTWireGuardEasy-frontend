@@ -29,12 +29,16 @@
 					<th class="col-value"> {{ int.listenPort }}</th>
 				</tr>
 				<tr>
-					<th>MTU:</th>
-					<th class="col-value">{{ int.mtu }}</th>
+					<th style="color: rgba(255, 59, 48, 1) !important;">Rx:</th>
+					<th style="color: rgba(255, 59, 48, 1) !important;">
+						{{ (Number(int.rxByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
+					</th>
 				</tr>
 				<tr>
-					<th>Running:</th>
-					<th class="col-value">{{ int.running }}</th>
+					<th style="color: rgba(50, 173, 230, 1) !important;">Tx:</th>
+					<th style="color: rgba(50, 173, 230, 1) !important;">
+						{{ (Number(int.txByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
+					</th>
 				</tr>
 			</table>
 			<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"

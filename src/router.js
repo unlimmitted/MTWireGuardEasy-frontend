@@ -3,6 +3,7 @@ import ControlPanel from "./pages/ControlPanel.vue";
 import {useStore} from "./store.js";
 import LoginPage from "./pages/LoginPage.vue";
 import SettingsPage from "./pages/SettingsPage.vue";
+import {connect} from "./websocket.js";
 
 
 const router = createRouter({
@@ -25,7 +26,8 @@ const router = createRouter({
 						})
 						.catch(() => {
 							next()
-						});
+						})
+					connect()
 				} else {
 					next()
 				}

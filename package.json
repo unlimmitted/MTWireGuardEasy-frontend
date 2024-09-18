@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.12",
+    "@stomp/stompjs": "^6.1.2",
     "axios": "^1.7.5",
     "pinia": "^2.1.7",
     "qrcode.vue": "^3.4.1",
     "quasar": "^2.16.9",
+    "sockjs-client": "^1.6.1",
     "vue": "^3.4.38",
     "vue-router": "^4.4.3"
   },
