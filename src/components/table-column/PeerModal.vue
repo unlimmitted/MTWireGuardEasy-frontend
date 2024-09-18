@@ -82,7 +82,7 @@ export default {
 			const url = window.URL.createObjectURL(new Blob([this.peerConfig]))
 			const link = document.createElement('a')
 			link.href = url
-			link.setAttribute('download', this.peerDetails.comment.split('\n')[0] + '.conf')
+			link.setAttribute('download', this.peerDetails.name + '.conf')
 			document.body.appendChild(link)
 			link.click()
 			link.parentNode.removeChild(link)
