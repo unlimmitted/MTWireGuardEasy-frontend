@@ -8,7 +8,8 @@ export const useStore = defineStore('store', {
 				name: 'name',
 				label: 'Name',
 				align: 'center',
-				sortable: true
+				sortable: true,
+				field: row => row.name
 			},
 			{
 				name: 'ip',

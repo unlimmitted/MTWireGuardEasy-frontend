@@ -154,6 +154,9 @@ export default {
 			axios.post("api/v1/configurator", settingsObj)
 				.then(() => {
 					this.store.fetchRouterSettings()
+					if (this.store.settings) {
+						this.$router.push('/')
+					}
 				})
 		}
 	},

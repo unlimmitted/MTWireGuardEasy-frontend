@@ -40,42 +40,49 @@
 			<q-input
 				id="task-name"
 				v-model="this.localWgEndpoint"
+				readonly
 				label="Local WireGuard Endpoint"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.localWgEndpointPort"
+				readonly
 				label="Local WireGuard Endpoint port"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.localNetwork"
+				readonly
 				label="Local network"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.ipAddress"
+				readonly
 				label="IP address of external WireGuard"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.allowedAddress"
+				readonly
 				label="Allowed Address"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.endpoint"
+				readonly
 				label="External WireGuard Endpoint"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.endpointPort"
+				readonly
 				label="External WireGuard Endpoint port"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
@@ -88,25 +95,25 @@
 			<q-input
 				id="task-name"
 				v-model="this.presharedKey"
+				readonly
 				label="External WireGuard Preshared Key"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.privateKey"
+				readonly
 				label="External WireGuard Private Key"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
 				v-model="this.wanInterfaceName"
+				readonly
 				label="Local WAN Interface name"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 		</q-card-section>
-		<q-card-actions>
-
-		</q-card-actions>
 	</q-card>
 </template>
 
