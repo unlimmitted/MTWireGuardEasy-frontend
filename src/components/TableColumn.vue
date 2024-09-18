@@ -7,7 +7,7 @@
 		virtual-scroll
 		color="amber"
 		:rows-per-page-options="[0]"
-		style="height: calc(100vh - 80px);"
+		style="height: calc(100vh - 40px);"
 	>
 		<template v-slot:header="props">
 			<tr>

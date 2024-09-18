@@ -60,13 +60,13 @@ export default {
 	background-size: 20px 20px;
 }
 .infoColumn {
-	margin-top: 40px;
+	margin-top: 16px;
 	margin-bottom: 40px;
 	padding: 0 20px 0 20px;
 	width: 30%;
 }
 .tableColumn {
-	margin-top: 40px;
+	margin-top: 16px;
 	margin-bottom: 40px;
 	padding: 0 20px 0 0;
 	width: 70%;

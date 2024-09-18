@@ -50,7 +50,7 @@
 				style="width: 100%;margin-right: 8px"
 				@click="this.settingsModal = !this.settingsModal"
 			>
-				Настройки
+				Settings
 			</q-btn>
 			<q-btn icon="logout" color="primary" @click="this.logout"/>
 		</div>

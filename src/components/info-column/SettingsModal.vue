@@ -6,7 +6,7 @@
 			style="width: 100%;flex-wrap: nowrap;display: flex;align-items: center"
 			class="justify-between text-h5"
 		>
-			Настройки роутера
+			Router Settings
 			<q-btn
 				flat
 				icon="close"
