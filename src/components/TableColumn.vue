@@ -78,16 +78,16 @@ export default {
 			this.showPeerDetails = true
 			this.peerDetails = row
 			this.peerConfig = `
-			  [Interface]
-			  PrivateKey = ${row.privateKey}
-			  Address = ${row.allowedAddress}
-			  DNS = 1.1.1.1
-			  MTU = 1400
-			  [Peer]
-			  PublicKey = ${row.publicKey}
-			  AllowedIPs = 0.0.0.0/0, ::/0
-			  Endpoint = ${this.store.settings.inputWgEndpoint}:${this.store.settings.inputWgEndpointPort}
-			  PersistentKeepalive = 0`
+			  |[Interface]
+			  |PrivateKey = ${row.privateKey}
+			  |Address = ${row.allowedAddress}
+			  |DNS = 1.1.1.1
+			  |MTU = 1400
+			  |[Peer]
+			  |PublicKey = ${row.publicKey}
+			  |AllowedIPs = 0.0.0.0/0, ::/0
+			  |Endpoint = ${this.store.settings.inputWgEndpoint}:${this.store.settings.inputWgEndpointPort}
+			  |PersistentKeepalive = 0`.stripMargin()
 		},
 		closeModal() {
 			this.showPeerDetails = false
