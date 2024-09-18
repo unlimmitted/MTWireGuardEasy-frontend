@@ -18,9 +18,9 @@
 		<q-card-section>
 			<q-input
 				id="task-name"
-				v-model="this.localWgInterfaceName"
+				v-model="this.inputWgInterfaceName"
 				readonly
-				label="Local WireGuard Interface name"
+				label="Input WireGuard Interface name"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
@@ -32,16 +32,16 @@
 			/>
 			<q-input
 				id="task-name"
-				v-model="this.localWgNetwork"
+				v-model="this.inputWgNetwork"
 				readonly
-				label="Local WireGuard Network"
+				label="Input WireGuard Address"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
 				id="task-name"
-				v-model="this.localWgEndpoint"
+				v-model="this.inputWgEndpoint"
 				readonly
-				label="Local WireGuard Endpoint"
+				label="Input WireGuard Endpoint"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
@@ -53,9 +53,9 @@
 			/>
 			<q-input
 				id="task-name"
-				v-model="this.localNetwork"
+				v-model="this.localNetworkAddress"
 				readonly
-				label="Local network"
+				label="Local Network Address"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
@@ -123,12 +123,12 @@ import {useStore} from "../../store.js";
 export default {
 	name: "SettingsModal",
 	data: () => ({
-		localWgInterfaceName: '',
+		inputWgInterfaceName: '',
 		toVpnAddressList: '',
-		localWgNetwork: '',
-		localWgEndpoint: '',
+		inputWgNetwork: '',
+		inputWgEndpoint: '',
 		localWgEndpointPort: '',
-		localNetwork: '',
+		localNetworkAddress: '',
 		ipAddress: '',
 		allowedAddress: '',
 		endpoint: '',
@@ -139,12 +139,12 @@ export default {
 		presharedKey: ''
 	}),
 	created() {
-		this.localWgInterfaceName = this.store.settings.localWgInterfaceName
+		this.inputWgInterfaceName = this.store.settings.inputWgInterfaceName
 		this.toVpnAddressList = this.store.settings.toVpnAddressList
-		this.localWgNetwork = this.store.settings.localWgNetwork
-		this.localWgEndpoint = this.store.settings.localWgEndpoint
-		this.localWgEndpointPort = this.store.settings.localWgEndpointPort
-		this.localNetwork = this.store.settings.localNetwork
+		this.inputWgNetwork = this.store.settings.inputWgAddress
+		this.inputWgEndpoint = this.store.settings.inputWgEndpoint
+		this.localWgEndpointPort = this.store.settings.inputWgEndpointPort
+		this.localNetworkAddress = this.store.settings.localNetwork
 		this.ipAddress = this.store.settings.ipAddress
 		this.allowedAddress = this.store.settings.allowedAddress
 		this.endpoint = this.store.settings.endpoint

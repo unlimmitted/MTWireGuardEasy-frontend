@@ -86,7 +86,7 @@ export default {
 			  [Peer]
 			  PublicKey = ${row.publicKey}
 			  AllowedIPs = 0.0.0.0/0, ::/0
-			  Endpoint = ${this.store.settings.localWgEndpoint}:${this.store.settings.localWgEndpointPort}
+			  Endpoint = ${this.store.settings.inputWgEndpoint}:${this.store.settings.inputWgEndpointPort}
 			  PersistentKeepalive = 0`
 		},
 		closeModal() {
