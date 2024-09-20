@@ -44,6 +44,9 @@ export default {
 			this.$router.push('/settings')
 		}
 	},
+	created() {
+		this.store.fetchTrafficForInterface()
+	},
 	setup() {
 		const store = useStore()
 		return { store }
@@ -63,12 +66,13 @@ export default {
 	margin-top: 16px;
 	margin-bottom: 40px;
 	padding: 0 20px 0 20px;
-	width: 30%;
+	width: 20%;
+	min-width: 300px !important;
 }
 .tableColumn {
 	margin-top: 16px;
 	margin-bottom: 40px;
 	padding: 0 20px 0 0;
-	width: 70%;
+	width: 80%;
 }
 </style>

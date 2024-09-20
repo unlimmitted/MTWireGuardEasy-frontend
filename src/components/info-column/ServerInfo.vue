@@ -1,5 +1,8 @@
 <template>
-	<q-card class="shadow-1 infoBox" style="overflow: hidden">
+	<q-card
+		class="shadow-1 infoBox"
+		:style="this.isMobile ? '' : 'height: calc(100vh - 243px);overflow: scroll;'"
+	>
 		<div class="server-info">
 			Server info
 		</div>
@@ -18,7 +21,10 @@
 		<div class="server-info">
 			WG Interfaces
 		</div>
-		<div v-for="(int, index) in this.store.serverData.interfaces">
+		<div
+			style="display: flex;flex-direction: row;flex-wrap: wrap;"
+			v-for="(int, index) in this.store.serverData.interfaces"
+		>
 			<table>
 				<tr>
 					<th>Interface name:</th>
@@ -41,10 +47,19 @@
 					</th>
 				</tr>
 			</table>
+			<div style="min-width: 100%;display: flex;justify-content: start;height: 100%;">
+				<apexchart
+					v-if="int.name === this.store.settings.inputWgInterfaceName"
+					style="max-width: 386px !important;width: 386px !important;"
+					type="area"
+					:options="this.chartOptionsComp"
+					:series="this.storeSeries"
+				/>
+			</div>
 			<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"
 						 style="margin: 8px 0 8px 0"/>
 		</div>
-		<div style="width: 100%;display: flex;flex-direction: row;flex-wrap: nowrap;">
+		<div style="width: 100%;display: flex;flex-direction: row;flex-wrap: nowrap;position: sticky;bottom: 0;background-color: white;">
 			<q-btn
 				icon="settings"
 				style="width: 100%;margin-right: 8px"
@@ -67,9 +82,13 @@ import SettingsModal from "./SettingsModal.vue";
 import axios from "axios";
 import router from "../../router.js";
 import {useRoute} from "vue-router";
+import VueApexCharts from "vue3-apexcharts";
 
 export default {
-	components: {SettingsModal},
+	components: {
+		SettingsModal,
+		apexchart: VueApexCharts
+	},
 	data: () => ({
 		settingsModal: false
 	}),
@@ -80,6 +99,17 @@ export default {
 						this.$router.push('/login')
 					}
 				)
+		}
+	},
+	computed: {
+		isMobile() {
+			return this.$q.screen.width < 1023
+		},
+		chartOptionsComp () {
+			return this.store.chartOptions
+		},
+		storeSeries () {
+			return this.store.series
 		}
 	},
 	setup() {

@@ -89,6 +89,7 @@
 			<q-input
 				id="task-name"
 				v-model="this.publicKey"
+				readonly
 				label="External WireGuard Public Key"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>

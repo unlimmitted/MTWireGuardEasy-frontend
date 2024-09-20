@@ -19,102 +19,20 @@
 		</q-btn>
 	</q-card>
 	<ServerInfo/>
-	<q-card
-		class="shadow-1"
-		style="margin-top: 8px;"
-		:class="this.isMobile ? '': 'chart'"
-	>
-		<apexchart
-			style="max-width: 380px !important;"
-			type="area"
-			:options="chartOptions"
-			:series="series"
-		/>
-	</q-card>
 </template>
 
 <script>
-import ServerInfo from "./info-column/ServerInfo.vue";
-import axios from "axios";
-import {useStore} from "../store.js";
-import VueApexCharts from "vue3-apexcharts"
+import ServerInfo from "./info-column/ServerInfo.vue"
+import axios from "axios"
+import {useStore} from "../store.js"
 
 export default {
 	components: {
-		ServerInfo,
-		apexchart: VueApexCharts
+		ServerInfo
 	},
 	data: () => ({
-		wgPeerName: '',
-		series: [{
-			name: 'Tx',
-			data: [31, 40, 28, 51, 42, 109, 100]
-		}, {
-			name: 'Rx',
-			data: [11, 32, 45, 32, 34, 52, 41]
-		}],
-		chartOptions: {
-			legend: {
-				position: 'right',
-				horizontalAlign: 'center',
-			},
-			colors: ['#1A73E8', '#B32824'],
-			fill: {
-				colors: ['#1A73E8', '#B32824']
-			},
-			chart: {
-				height: 250,
-				type: 'area',
-				toolbar: {
-					tools: {
-						download: false,
-						selection: false,
-						zoom: false,
-						zoomin: false,
-						zoomout: false,
-						pan: false,
-						reset: false
-					},
-				},
-				zoom: {
-					enabled: false,
-					type: 'x',
-					autoScaleYaxis: false,
-					zoomedArea: {
-						fill: {
-							color: '#90CAF9',
-							opacity: 0.4
-						},
-						stroke: {
-							color: '#0D47A1',
-							opacity: 0.4,
-							width: 1
-						}
-					}
-				}
-			},
-			dataLabels: {
-				enabled: false,
-			},
-			stroke: {
-				curve: 'smooth'
-			},
-			xaxis: {
-				type: 'datetime',
-				categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-			},
-			tooltip: {
-				x: {
-					format: 'dd/MM/yy HH:mm'
-				},
-			},
-		}
+		wgPeerName: ''
 	}),
-	computed: {
-		isMobile() {
-			return this.$q.screen.width < 1023
-		}
-	},
 	methods: {
 		createPeer() {
 			if (this.wgPeerName) {
