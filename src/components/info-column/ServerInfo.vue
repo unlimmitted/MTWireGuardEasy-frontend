@@ -1,7 +1,7 @@
 <template>
 	<q-card
 		class="shadow-1 infoBox"
-		:style="this.isMobile ? '' : 'height: calc(100vh - 243px);overflow: scroll;'"
+		:style="this.isMobile ? '' : 'height: 100%;display: flex;flex-direction: column;overflow-x: hidden;overflow-y: scroll;'"
 	>
 		<div class="server-info">
 			Server info
@@ -21,45 +21,47 @@
 		<div class="server-info">
 			WG Interfaces
 		</div>
-		<div
-			style="display: flex;flex-direction: row;flex-wrap: wrap;"
-			v-for="(int, index) in this.store.serverData.interfaces"
-		>
-			<table>
-				<tr>
-					<th>Interface name:</th>
-					<th class="col-value">{{ int.name }}</th>
-				</tr>
-				<tr>
-					<th>Port:</th>
-					<th class="col-value"> {{ int.listenPort }}</th>
-				</tr>
-				<tr>
-					<th style="color: rgba(255, 59, 48, 1) !important;">Rx:</th>
-					<th style="color: rgba(255, 59, 48, 1) !important;">
-						{{ (Number(int.rxByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
-					</th>
-				</tr>
-				<tr>
-					<th style="color: rgba(50, 173, 230, 1) !important;">Tx:</th>
-					<th style="color: rgba(50, 173, 230, 1) !important;">
-						{{ (Number(int.txByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
-					</th>
-				</tr>
-			</table>
-			<div style="min-width: 100%;display: flex;justify-content: start;height: 100%;">
-				<apexchart
-					v-if="int.name === this.store.settings.inputWgInterfaceName"
-					style="max-width: 386px !important;width: 386px !important;"
-					type="area"
-					:options="this.chartOptionsComp"
-					:series="this.storeSeries"
-				/>
+		<div style="overflow: scroll;height: 100%">
+			<div
+				style="display: flex;flex-direction: row;flex-wrap: wrap;"
+				v-for="(int, index) in this.store.serverData.interfaces"
+			>
+				<table>
+					<tr>
+						<th>Interface name:</th>
+						<th class="col-value">{{ int.name }}</th>
+					</tr>
+					<tr>
+						<th>Port:</th>
+						<th class="col-value"> {{ int.listenPort }}</th>
+					</tr>
+					<tr>
+						<th style="color: rgba(255, 59, 48, 1) !important;">Rx:</th>
+						<th style="color: rgba(255, 59, 48, 1) !important;">
+							{{ (Number(int.rxByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
+						</th>
+					</tr>
+					<tr>
+						<th style="color: rgba(50, 173, 230, 1) !important;">Tx:</th>
+						<th style="color: rgba(50, 173, 230, 1) !important;">
+							{{ (Number(int.txByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
+						</th>
+					</tr>
+				</table>
+				<div style="min-width: 100%;display: flex;justify-content: start;height: 100%;">
+					<apexchart
+						v-if="int.name === this.store.settings.inputWgInterfaceName"
+						style="max-width: 386px !important;width: 386px !important;"
+						type="area"
+						:options="this.chartOptionsComp"
+						:series="this.storeSeries"
+					/>
+				</div>
+				<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"
+							 style="margin: 8px 0 8px 0"/>
 			</div>
-			<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"
-						 style="margin: 8px 0 8px 0"/>
 		</div>
-		<div style="width: 100%;display: flex;flex-direction: row;flex-wrap: nowrap;position: sticky;bottom: 0;background-color: white;">
+		<div style="width: 100%;display: flex;flex-direction: row;flex-wrap: nowrap;position: absolute;bottom: 0;right: 0;padding: 8px;background-color: white;">
 			<q-btn
 				icon="settings"
 				style="width: 100%;margin-right: 8px"
@@ -103,7 +105,7 @@ export default {
 	},
 	computed: {
 		isMobile() {
-			return this.$q.screen.width < 1023
+			return this.$q.screen.width < 1180
 		},
 		chartOptionsComp () {
 			return this.store.chartOptions

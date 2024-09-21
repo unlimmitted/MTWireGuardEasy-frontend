@@ -157,7 +157,7 @@ export default {
 	},
 	computed: {
 		isMobile() {
-			return this.$q.screen.width < 1023
+			return this.$q.screen.width < 1180
 		}
 	},
 	setup() {

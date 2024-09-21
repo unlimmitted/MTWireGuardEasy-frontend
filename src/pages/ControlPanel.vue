@@ -35,7 +35,7 @@ export default {
 	},
 	computed: {
 		isMobile() {
-			return this.$q.screen.width < 1023
+			return this.$q.screen.width < 1180
 		}
 	},
 	mounted() {
@@ -61,18 +61,17 @@ export default {
 	width: 100%;
 	background-image: radial-gradient(circle, black 0.1px, transparent 1px);
 	background-size: 20px 20px;
+	padding: 16px;
+	height: 100vh;
 }
 .infoColumn {
-	margin-top: 16px;
-	margin-bottom: 40px;
-	padding: 0 20px 0 20px;
+	display: flex;
+	flex-direction: column;
+	padding: 0 20px 0 0;
 	width: 20%;
 	min-width: 300px !important;
 }
 .tableColumn {
-	margin-top: 16px;
-	margin-bottom: 40px;
-	padding: 0 20px 0 0;
 	width: 80%;
 }
 </style>

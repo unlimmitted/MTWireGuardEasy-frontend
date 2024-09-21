@@ -69,9 +69,8 @@ export const useStore = defineStore('store', {
 		}],
 		chartOptions: {
 			legend: {
-				enabled: false,
-				// position: 'right',
-				// horizontalAlign: 'center',
+				position: 'top',
+				horizontalAlign: 'center',
 			},
 			colors: ['#1A73E8', '#B32824'],
 			fill: {
