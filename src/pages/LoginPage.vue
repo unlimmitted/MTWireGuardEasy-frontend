@@ -29,6 +29,7 @@
 							<q-btn
 								icon-right="login"
 								style="width: 100%" color="primary"
+								:loading="this.loginAccept"
 								@click="this.auth"
 							>
 								Sign in
@@ -48,7 +49,8 @@ export default {
 	name: "LoginPage",
 	data: () => ({
 		login: '',
-		password: ''
+		password: '',
+		loginAccept: false
 	}),
 	methods: {
 		auth() {
@@ -56,6 +58,7 @@ export default {
 				.then(() => {
 					axios.get("/auth/status").then(res => {
 						if (res.data.authenticated) {
+							this.loginAccept = true;
 							this.$router.push('/')
 						} else {
 							this.login = ''

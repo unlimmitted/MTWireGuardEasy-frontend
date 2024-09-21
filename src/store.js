@@ -30,12 +30,24 @@ export const useStore = defineStore('store', {
 				align: 'center',
 				label: 'Rx',
 				field: row => (Number(row.rx) / 1024 / 1024).toFixed(1) + ' MiB',
+				sortable: true,
+				sort: (a, b, rowA, rowB) => {
+					const rxA = rowA.rx.split(' MiB')[0]
+					const rxB = rowB.rx.split(' MiB')[0]
+					return rxA - rxB
+				}
 			},
 			{
 				name: 'tx',
 				align: 'center',
 				label: 'Tx',
-				field: row => (Number(row.tx) / 1024 / 1024).toFixed(1) + ' MiB'
+				field: row => (Number(row.tx) / 1024 / 1024).toFixed(1) + ' MiB',
+				sortable: true,
+				sort: (a, b, rowA, rowB) => {
+					const txA = rowA.tx.split(' MiB')[0]
+					const txB = rowB.tx.split(' MiB')[0]
+					return txA - txB
+				}
 			},
 			{
 				name: 'current-endpoint-address',
