@@ -14,33 +14,32 @@ const router = createRouter({
 			component: ControlPanel,
 			beforeEnter: (to, from, next) => {
 				const store = useStore()
-				if (store.tableData) {
-					store.fetchRouterSettings()
-						.then(() => {
-							if (store.settings) {
-								return store.fetchData()
-							}
-						})
-						.then(() => {
-							if (store.settings) {
-								return store.fetchRouterInfo()
-							}
-						})
-						.then(() => {
-							if (store.settings) {
-								return store.fetchTrafficForInterface()
-							}
-						})
-						.then(() => {
-							next()
-						})
-						.catch(() => {
-							next()
-						})
-					connect()
-				} else {
-					next()
-				}
+				store.fetchRouterSettings()
+					.then(() => {
+						if (store.settings) {
+							store.fetchData()
+								.then(() => {
+									return store.fetchRouterInfo()
+								})
+								.then(() => {
+									return store.fetchTrafficForInterface()
+								})
+								.then(() => {
+									next()
+								})
+								.catch(() => {
+									next()
+								})
+							connect()
+						} else {
+							return next('/settings')
+						}
+					})
+				// if (store.tableData) {
+				//
+				// } else {
+				// 	next()
+				// }
 			}
 		},
 		{
@@ -49,7 +48,15 @@ const router = createRouter({
 		},
 		{
 			path: '/settings',
-			component: SettingsPage
+			component: SettingsPage,
+			beforeEnter: (to, from, next) => {
+				const store = useStore()
+				if (store.settings !== false) {
+					next('/')
+				} else {
+					next()
+				}
+			}
 		}
 	]
 });

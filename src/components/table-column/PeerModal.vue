@@ -33,6 +33,7 @@
 					Copy config text
 				</q-btn>
 				<div
+					v-if="this.store.settings.vpnChainMode"
 					style="display: flex; flex-direction: row;align-items: center;margin-top: 8px;justify-content: center;">
 					Double VPN
 					<q-toggle

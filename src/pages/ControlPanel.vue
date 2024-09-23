@@ -38,12 +38,6 @@ export default {
 			return this.$q.screen.width < 1180
 		}
 	},
-	mounted() {
-		if (!this.store.settings) {
-			console.log(this.store.settings)
-			this.$router.push('/settings')
-		}
-	},
 	setup() {
 		const store = useStore()
 		return { store }

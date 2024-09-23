@@ -8,31 +8,26 @@
 					</q-card-section>
 					<q-card-section>
 						<q-input
-							id="task-name"
 							v-model="this.localWgNetwork"
 							label="Local WireGuard Network"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
 						/>
 						<q-input
-							id="task-name"
 							v-model="this.localWgEndpoint"
 							label="Local WireGuard Endpoint"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
 						/>
 						<q-input
-							id="task-name"
 							v-model="this.localWgEndpointPort"
 							label="Local WireGuard Endpoint port"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
 						/>
 						<q-input
-							id="task-name"
 							v-model="this.localNetwork"
 							label="Local network"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
 						/>
 						<q-input
-							id="task-name"
 							v-model="this.wanInterfaceName"
 							label="Local WAN Interface name"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
@@ -120,7 +115,7 @@ export default {
 	name: "Settings",
 	data: () => ({
 		expand: false,
-		inProgress:false,
+		inProgress: false,
 
 		vpnChainMode: false,
 		localWgNetwork: '',
@@ -138,6 +133,7 @@ export default {
 	}),
 	methods: {
 		saveSettings() {
+			this.inProgress = true
 			const settingsObj = {
 				vpnChainMode: this.vpnChainMode,
 				inputWgAddress: this.localWgNetwork,
@@ -157,13 +153,13 @@ export default {
 				delete settingsObj.externalWgPresharedKey
 			}
 			axios.post("api/v1/configurator", settingsObj)
-				.then(() => {
+				.then((response) => {
 					this.inProgress = false
-					this.store.fetchRouterSettings().then(()  => {
-						if (this.store.settings) {
-							this.$router.push('/')
-						}
-					})
+					this.store.settings = response.data
+					if (this.store.settings) {
+						console.log('sdfsdfsdfsdfsdfsdf')
+						this.$router.push('/')
+					}
 				})
 		}
 	},
