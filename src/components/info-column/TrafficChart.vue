@@ -70,6 +70,9 @@ export default {
 			this.renderChart()
 		}
 	},
+	mounted() {
+		document.getElementsByClassName("canvasjs-chart-credit")[0].style.display = "none";
+	},
 	setup() {
 		const store = useStore()
 		return {store}
