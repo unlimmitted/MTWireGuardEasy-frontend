@@ -44,9 +44,6 @@ export default {
 			this.$router.push('/settings')
 		}
 	},
-	created() {
-		this.store.fetchTrafficForInterface()
-	},
 	setup() {
 		const store = useStore()
 		return { store }

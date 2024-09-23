@@ -15,12 +15,22 @@ const router = createRouter({
 			beforeEnter: (to, from, next) => {
 				const store = useStore()
 				if (store.tableData) {
-					store.fetchData()
+					store.fetchRouterSettings()
 						.then(() => {
-							return store.fetchRouterSettings()
-						}).then(() => {
-						return store.fetchRouterInfo()
-					})
+							if (store.settings) {
+								return store.fetchData()
+							}
+						})
+						.then(() => {
+							if (store.settings) {
+								return store.fetchRouterInfo()
+							}
+						})
+						.then(() => {
+							if (store.settings) {
+								return store.fetchTrafficForInterface()
+							}
+						})
 						.then(() => {
 							next()
 						})

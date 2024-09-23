@@ -100,6 +100,7 @@
 							icon="save"
 							color="primary"
 							style="width: 100%"
+							:loading="this.inProgress"
 							@click="this.saveSettings"
 						>
 							Save
@@ -119,6 +120,7 @@ export default {
 	name: "Settings",
 	data: () => ({
 		expand: false,
+		inProgress:false,
 
 		vpnChainMode: false,
 		localWgNetwork: '',
@@ -138,25 +140,30 @@ export default {
 		saveSettings() {
 			const settingsObj = {
 				vpnChainMode: this.vpnChainMode,
-				localWgNetwork: this.localWgNetwork,
-				localWgEndpoint: this.localWgEndpoint,
-				localWgEndpointPort: this.localWgEndpointPort,
+				inputWgAddress: this.localWgNetwork,
+				inputWgEndpoint: this.localWgEndpoint,
+				inputWgEndpointPort: this.localWgEndpointPort,
 				localNetwork: this.localNetwork,
 				ipAddress: this.ipAddress,
 				allowedAddress: this.allowedAddress,
 				endpoint: this.endpoint,
 				endpointPort: this.endpointPort,
-				publicKey: this.publicKey,
-				privateKey: this.privateKey,
+				externalWgPublicKey: this.publicKey,
+				externalWgPrivateKey: this.privateKey,
 				wanInterfaceName: this.wanInterfaceName,
-				presharedKey: this.presharedKey
+				externalWgPresharedKey: this.presharedKey
+			}
+			if (this.presharedKey === "") {
+				delete settingsObj.externalWgPresharedKey
 			}
 			axios.post("api/v1/configurator", settingsObj)
 				.then(() => {
-					this.store.fetchRouterSettings()
-					if (this.store.settings) {
-						this.$router.push('/')
-					}
+					this.inProgress = false
+					this.store.fetchRouterSettings().then(()  => {
+						if (this.store.settings) {
+							this.$router.push('/')
+						}
+					})
 				})
 		}
 	},

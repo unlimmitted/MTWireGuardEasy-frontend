@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@canvasjs/charts": "^3.10.8",
+    "@canvasjs/vue-charts": "^1.0.4",
     "@quasar/extras": "^1.16.12",
     "@stomp/stompjs": "^6.1.2",
     "apexcharts": "^3.53.0",

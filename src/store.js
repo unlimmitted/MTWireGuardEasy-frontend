@@ -60,70 +60,7 @@ export const useStore = defineStore('store', {
 		token: '',
 		serverData: {},
 		settings: {},
-		series: [{
-			name: 'Tx',
-			data: []
-		}, {
-			name: 'Rx',
-			data: []
-		}],
-		chartOptions: {
-			legend: {
-				position: 'top',
-				horizontalAlign: 'center',
-			},
-			colors: ['#1A73E8', '#B32824'],
-			fill: {
-				colors: ['#1A73E8', '#B32824']
-			},
-			chart: {
-				height: 250,
-				type: 'area',
-				toolbar: {
-					tools: {
-						download: false,
-						selection: false,
-						zoom: false,
-						zoomin: false,
-						zoomout: false,
-						pan: false,
-						reset: false
-					},
-				},
-				zoom: {
-					enabled: false,
-					type: 'x',
-					autoScaleYaxis: false,
-					zoomedArea: {
-						fill: {
-							color: '#90CAF9',
-							opacity: 0.4
-						},
-						stroke: {
-							color: '#0D47A1',
-							opacity: 0.4,
-							width: 1
-						}
-					}
-				}
-			},
-			dataLabels: {
-				enabled: false,
-			},
-			stroke: {
-				curve: 'smooth'
-			},
-			xaxis: {
-				type: 'datetime',
-				categories: [],
-				format: 'HH:mm'
-			},
-			tooltip: {
-				x: {
-					format: 'HH:mm'
-				},
-			},
-		}
+		trafficData: []
 	}),
 	actions: {
 		fetchRouterInfo() {
@@ -141,28 +78,13 @@ export const useStore = defineStore('store', {
 		fetchData() {
 			return axios.get('/api/v1/get-wg-peers')
 				.then(response => {
-					if (response.status === 200) {
-						this.tableData = response.data
-					} else if (response.status === 500) {
-						this.$q.notify({
-							message: 'Fuck MikroTik API: Pls reload page',
-							type: 'negative',
-							position: 'top-right',
-							actions: [{
-								icon: 'close', color: 'white', dense: true, handler: () => undefined
-							}]
-						})
-					}
+					this.tableData = response.data
 				})
 		},
 		fetchTrafficForInterface() {
 			return axios.get('/api/v1/get-traffic-by-minutes')
 				.then(response => {
-					response.data.forEach((item) => {
-						this.series[0].data.push(item.tx)
-						this.series[1].data.push(item.rx)
-						this.chartOptions.xaxis.categories.push(new Date(item.time *1000).toISOString())
-					})
+					this.trafficData = response.data
 				})
 		}
 	}
