@@ -5,13 +5,13 @@
 	>
 		<div
 			class="infoColumn"
-			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;': ''"
+			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;': 'padding: 0 20px 0 0;'"
 		>
 			<info-column/>
 		</div>
 		<div
 			class="tableColumn"
-			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;margin-top: 0;padding-left: 20px;': ''"
+			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;margin-top: 0;': ''"
 		>
 			<table-column/>
 		</div>
@@ -64,7 +64,6 @@ export default {
 .infoColumn {
 	display: flex;
 	flex-direction: column;
-	padding: 0 20px 0 0;
 	width: 20%;
 	min-width: 300px !important;
 }
