@@ -17,42 +17,36 @@
 		</q-card-section>
 		<q-card-section>
 			<q-input
-				
 				v-model="this.inputWgInterfaceName"
 				readonly
 				label="Input WireGuard Interface name"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
-				
 				v-model="this.toVpnAddressList"
 				readonly
 				label="Address List for routing peers"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
-				
 				v-model="this.inputWgNetwork"
 				readonly
 				label="Input WireGuard Address"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
-				
 				v-model="this.inputWgEndpoint"
 				readonly
 				label="Input WireGuard Endpoint"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
-				
 				v-model="this.localWgEndpointPort"
 				readonly
 				label="Local WireGuard Endpoint port"
 				:rules="[val => (val && val.length > 0) || 'Required field']"
 			/>
 			<q-input
-				
 				v-model="this.localNetworkAddress"
 				readonly
 				label="Local Network Address"

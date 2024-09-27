@@ -32,10 +32,7 @@
 							label="Local WAN Interface name"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
 						/>
-						<div style="display: flex;flex-direction: row;align-items: center;">
-							<q-checkbox v-model="this.vpnChainMode"/>
-							Enable Double WireGuard VPN
-						</div>
+						<q-checkbox v-model="this.vpnChainMode" label="Enable Double WireGuard VPN"/>
 						<q-expansion-item
 							v-if="this.vpnChainMode"
 							v-model="this.expand"
@@ -44,6 +41,13 @@
 						>
 							<q-card>
 								<q-card-section>
+									<q-file
+										clearable
+										outlined
+										v-model="configFile"
+										label="Select .conf file for parsing"
+										accept=".conf"
+									/>
 									<q-input
 										id="task-name"
 										v-model="this.ipAddress"
@@ -78,7 +82,6 @@
 										id="task-name"
 										v-model="this.presharedKey"
 										label="External WireGuard Preshared Key"
-										:rules="[val => (val && val.length > 0) || 'Required field']"
 									/>
 									<q-input
 										id="task-name"
@@ -129,9 +132,65 @@ export default {
 		publicKey: '',
 		privateKey: '',
 		wanInterfaceName: '',
-		presharedKey: ''
+		presharedKey: '',
+
+		configFile: null
 	}),
 	methods: {
+		parsingConfig() {
+			const reader = new FileReader()
+			let fileText
+			reader.onload = (file) => {
+				fileText = file.target.result.toString()
+				let strings = []
+				fileText.split("\n").forEach((line) => {
+					let editedString = ""
+					if (line.trim().length > 0) {
+						for (let i = 0; i < line.length; i++) {
+							editedString += line[i].trim()
+						}
+					}
+					strings.push(editedString)
+				})
+				strings.forEach((string) => {
+					if (string.includes("PrivateKey=")) {
+						this.privateKey = this.sliceString(string)
+					} else if (string.includes("Address=")) {
+						const value = this.sliceString(string)
+						if (value.includes(",")) {
+							this.ipAddress = this.sliceString(string).split(",")[0]
+						} else {
+							this.ipAddress = this.sliceString(string)
+						}
+					} else if (string.includes("PublicKey=")) {
+						this.publicKey = this.sliceString(string)
+					} else if (string.includes("AllowedIPs=")) {
+						const value = this.sliceString(string)
+						if (value.includes(",")) {
+							this.allowedAddress = value.split(",")[0]
+						} else {
+							this.allowedAddress = value
+						}
+					} else if (string.includes("Endpoint=")) {
+						const value = this.sliceString(string).split(":")
+						this.endpoint = value[0]
+						this.endpointPort = value[1]
+					} else if (string.includes("PresharedKey=")) {
+						this.presharedKey = this.sliceString(string)
+					}
+				})
+			}
+			reader.readAsText(this.configFile)
+		},
+
+		sliceString(string) {
+			const index = string.indexOf("=");
+			let value = ""
+			if (index !== -1) {
+				value = string.substring(index + 1)
+			}
+			return value
+		},
 		saveSettings() {
 			this.inProgress = true
 			const settingsObj = {
@@ -157,10 +216,27 @@ export default {
 					this.inProgress = false
 					this.store.settings = response.data
 					if (this.store.settings) {
-						console.log('sdfsdfsdfsdfsdfsdf')
 						this.$router.push('/')
 					}
 				})
+		}
+	},
+	watch: {
+		configFile: {
+			deep: true,
+			handler(newValue, oldValue) {
+				if (oldValue !== null) {
+					this.privateKey = ''
+					this.ipAddress = ''
+					this.publicKey = ''
+					this.allowedAddress = ''
+					this.endpoint = ''
+					this.endpointPort = ''
+				}
+				if (this.configFile) {
+					this.parsingConfig()
+				}
+			}
 		}
 	},
 	setup() {
