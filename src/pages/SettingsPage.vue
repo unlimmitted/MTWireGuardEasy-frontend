@@ -22,14 +22,14 @@
 							label="Local WireGuard Endpoint port"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
 						/>
+						<q-select
+							v-model="this.wanInterfaceName"
+							:options="this.store.etherInterfaces.map((it) => { return  it.name + ' : ' + it.macAddress})"
+							label="Local WAN Interface"
+						/>
 						<q-input
 							v-model="this.localNetwork"
 							label="Local network"
-							:rules="[val => (val && val.length > 0) || 'Required field']"
-						/>
-						<q-input
-							v-model="this.wanInterfaceName"
-							label="Local WAN Interface name"
 							:rules="[val => (val && val.length > 0) || 'Required field']"
 						/>
 						<q-checkbox v-model="this.vpnChainMode" label="Enable Double WireGuard VPN"/>
@@ -121,9 +121,9 @@ export default {
 		inProgress: false,
 
 		vpnChainMode: false,
-		localWgNetwork: '',
+		localWgNetwork: '10.1.0.0/24',
 		localWgEndpoint: '',
-		localWgEndpointPort: '',
+		localWgEndpointPort: '51820',
 		localNetwork: '',
 		ipAddress: '',
 		allowedAddress: '',
@@ -138,49 +138,60 @@ export default {
 	}),
 	methods: {
 		parsingConfig() {
-			const reader = new FileReader()
-			let fileText
-			reader.onload = (file) => {
-				fileText = file.target.result.toString()
-				let strings = []
-				fileText.split("\n").forEach((line) => {
-					let editedString = ""
-					if (line.trim().length > 0) {
-						for (let i = 0; i < line.length; i++) {
-							editedString += line[i].trim()
+			try {
+				const reader = new FileReader()
+				let fileText
+				reader.onload = (file) => {
+					fileText = file.target.result.toString()
+					let strings = []
+					fileText.split("\n").forEach((line) => {
+						let editedString = ""
+						if (line.trim().length > 0) {
+							for (let i = 0; i < line.length; i++) {
+								editedString += line[i].trim()
+							}
 						}
-					}
-					strings.push(editedString)
-				})
-				strings.forEach((string) => {
-					if (string.includes("PrivateKey=")) {
-						this.privateKey = this.sliceString(string)
-					} else if (string.includes("Address=")) {
-						const value = this.sliceString(string)
-						if (value.includes(",")) {
-							this.ipAddress = this.sliceString(string).split(",")[0]
-						} else {
-							this.ipAddress = this.sliceString(string)
+						strings.push(editedString)
+					})
+					strings.forEach((string) => {
+						if (string.includes("PrivateKey=")) {
+							this.privateKey = this.sliceString(string)
+						} else if (string.includes("Address=")) {
+							const value = this.sliceString(string)
+							if (value.includes(",")) {
+								this.ipAddress = this.sliceString(string).split(",")[0]
+							} else {
+								this.ipAddress = this.sliceString(string)
+							}
+						} else if (string.includes("PublicKey=")) {
+							this.publicKey = this.sliceString(string)
+						} else if (string.includes("AllowedIPs=")) {
+							const value = this.sliceString(string)
+							if (value.includes(",")) {
+								this.allowedAddress = value.split(",")[0]
+							} else {
+								this.allowedAddress = value
+							}
+						} else if (string.includes("Endpoint=")) {
+							const value = this.sliceString(string).split(":")
+							this.endpoint = value[0]
+							this.endpointPort = value[1]
+						} else if (string.includes("PresharedKey=")) {
+							this.presharedKey = this.sliceString(string)
 						}
-					} else if (string.includes("PublicKey=")) {
-						this.publicKey = this.sliceString(string)
-					} else if (string.includes("AllowedIPs=")) {
-						const value = this.sliceString(string)
-						if (value.includes(",")) {
-							this.allowedAddress = value.split(",")[0]
-						} else {
-							this.allowedAddress = value
-						}
-					} else if (string.includes("Endpoint=")) {
-						const value = this.sliceString(string).split(":")
-						this.endpoint = value[0]
-						this.endpointPort = value[1]
-					} else if (string.includes("PresharedKey=")) {
-						this.presharedKey = this.sliceString(string)
-					}
+					})
+				}
+				reader.readAsText(this.configFile)
+			} catch (ignoreError) {
+				this.$q.notify({
+					message: 'Configuration import failed',
+					type: 'negative',
+					position: 'top-right',
+					actions: [{
+						icon: 'close', color: 'white', dense: true, handler: () => undefined
+					}]
 				})
 			}
-			reader.readAsText(this.configFile)
 		},
 
 		sliceString(string) {
@@ -205,7 +216,7 @@ export default {
 				endpointPort: this.endpointPort,
 				externalWgPublicKey: this.publicKey,
 				externalWgPrivateKey: this.privateKey,
-				wanInterfaceName: this.wanInterfaceName,
+				wanInterfaceName: this.wanInterfaceName.split(" : ")[0],
 				externalWgPresharedKey: this.presharedKey
 			}
 			if (this.presharedKey === "") {
@@ -236,6 +247,12 @@ export default {
 				if (this.configFile) {
 					this.parsingConfig()
 				}
+			}
+		},
+		wanInterfaceName () {
+			if (this.wanInterfaceName.length > 0) {
+				this.localNetwork = this.store.etherInterfaces.find(it =>
+					it.name === this.wanInterfaceName.split(" : ")[0]).network + "/24"
 			}
 		}
 	},

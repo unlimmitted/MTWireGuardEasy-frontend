@@ -35,11 +35,6 @@ const router = createRouter({
 							return next('/settings')
 						}
 					})
-				// if (store.tableData) {
-				//
-				// } else {
-				// 	next()
-				// }
 			}
 		},
 		{
@@ -54,7 +49,10 @@ const router = createRouter({
 				if (store.settings !== false) {
 					next('/')
 				} else {
-					next()
+					store.fetchEtherInterfaces()
+						.then(() => {
+							next()
+						})
 				}
 			}
 		}

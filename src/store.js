@@ -60,7 +60,8 @@ export const useStore = defineStore('store', {
 		token: '',
 		serverData: {},
 		settings: {},
-		trafficData: []
+		trafficData: [],
+		etherInterfaces: []
 	}),
 	actions: {
 		fetchRouterInfo() {
@@ -85,6 +86,12 @@ export const useStore = defineStore('store', {
 			return axios.get('/api/v1/get-traffic-by-minutes')
 				.then(response => {
 					this.trafficData = response.data
+				})
+		},
+		fetchEtherInterfaces() {
+			return axios.get('/api/v1/get-ether-interfaces')
+				.then(response => {
+					this.etherInterfaces = response.data
 				})
 		}
 	}
