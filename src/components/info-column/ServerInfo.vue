@@ -23,59 +23,62 @@
 		</div>
 		<div style="overflow: scroll;height: 100%">
 			<div
-				style="display: flex;flex-direction: row;flex-wrap: wrap;position: relative"
 				v-for="(int, index) in this.store.serverData.interfaces"
+				style="display: flex;flex-direction: row;flex-wrap: wrap;position: relative"
 			>
-				<table>
-					<tr>
-						<th>Interface name:</th>
-						<th class="col-value">{{ int.name }}</th>
-					</tr>
-					<tr>
-						<th>Port:</th>
-						<th class="col-value"> {{ int.listenPort }}</th>
-					</tr>
-					<tr>
-						<th style="color: rgba(255, 59, 48, 1) !important;">Rx:</th>
-						<th style="color: rgba(255, 59, 48, 1) !important;">
-							{{ (Number(int.rxByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
-						</th>
-					</tr>
-					<tr>
-						<th style="color: rgba(50, 173, 230, 1) !important;">Tx:</th>
-						<th style="color: rgba(50, 173, 230, 1) !important;">
-							{{ (Number(int.txByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
-						</th>
-					</tr>
-				</table>
-				<div
-					v-if="int.name !== store.settings.inputWgInterfaceName"
-					:id="'drag-' + index"
-					class="drag-container shadow-1"
-					:style="int.isRouting ? 'opacity: 1;' : this.isDragOver === index ? '' : 'opacity: 0.6;'"
-					@dragenter.prevent="dragEnter(index)"
-					@dragleave.prevent="dragLeave(index)"
-					@dragover.prevent="dragOver(index)"
-					@drop.prevent="dragDrop(index)"
-					:class="{ 'drag-over': isDragOver === index }"
-				>
+				<div v-if="!int.disabled" style="width: 100%">
+					<table>
+						<tr>
+							<th>Interface name:</th>
+							<th class="col-value">{{ int.name }}</th>
+						</tr>
+						<tr>
+							<th>Port:</th>
+							<th class="col-value"> {{ int.listenPort }}</th>
+						</tr>
+						<tr>
+							<th style="color: rgba(255, 59, 48, 1) !important;">Rx:</th>
+							<th style="color: rgba(255, 59, 48, 1) !important;">
+								{{ (Number(int.rxByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
+							</th>
+						</tr>
+						<tr>
+							<th style="color: rgba(50, 173, 230, 1) !important;">Tx:</th>
+							<th style="color: rgba(50, 173, 230, 1) !important;">
+								{{ (Number(int.txByte) / 1024 / 1024 / 1024).toFixed(1) }} Gb
+							</th>
+						</tr>
+					</table>
 					<div
-						v-if="int.isRouting"
-						class="drag-item"
-						draggable="true"
-						@dragstart="dragStart($event, int, index)"
-						@dragend="dragEnd"
+						v-if="int.name !== store.settings.inputWgInterfaceName"
+						:id="'drag-' + index"
+						class="drag-container shadow-1"
+						:style="int.isRouting ? 'opacity: 1;' : this.isDragOver === index ? '' : 'opacity: 0.6;'"
+						@dragenter.prevent="dragEnter(index)"
+						@dragleave.prevent="dragLeave(index)"
+						@dragover.prevent="dragOver(index)"
+						@drop.prevent="dragDrop(index)"
+						:class="{ 'drag-over': isDragOver === index }"
 					>
-						Here
+						<div
+							v-if="int.isRouting"
+							class="drag-item"
+							draggable="true"
+							@dragstart="dragStart($event, int, index)"
+							@dragend="dragEnd"
+						>
+							Here
+						</div>
 					</div>
-				</div>
-				<div style="min-width: 100%;display: flex;justify-content: start;height: 100%;">
-					<traffic-chart
+					<div
 						v-if="int.name === this.store.settings.inputWgInterfaceName"
-					/>
+						style="min-width: 100%;display: flex;justify-content: start;height: 100%;"
+					>
+						<traffic-chart/>
+					</div>
+					<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"
+								 style="margin: 8px 0 8px 0"/>
 				</div>
-				<q-separator v-if="!(this.store.serverData.interfaces.length - 1 === index)"
-							 style="margin: 8px 0 8px 0"/>
 			</div>
 		</div>
 		<div
