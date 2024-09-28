@@ -23,7 +23,7 @@
 		</div>
 		<div style="overflow: scroll;height: 100%">
 			<div
-				style="display: flex;flex-direction: row;flex-wrap: wrap;"
+				style="display: flex;flex-direction: row;flex-wrap: wrap;position: relative"
 				v-for="(int, index) in this.store.serverData.interfaces"
 			>
 				<table>
@@ -48,6 +48,27 @@
 						</th>
 					</tr>
 				</table>
+				<div
+					v-if="int.name !== store.settings.inputWgInterfaceName"
+					:id="'drag-' + index"
+					class="drag-container shadow-1"
+					:style="int.isRouting ? 'opacity: 1;' : this.isDragOver === index ? '' : 'opacity: 0.6;'"
+					@dragenter.prevent="dragEnter(index)"
+					@dragleave.prevent="dragLeave(index)"
+					@dragover.prevent="dragOver(index)"
+					@drop.prevent="dragDrop(index)"
+					:class="{ 'drag-over': isDragOver === index }"
+				>
+					<div
+						v-if="int.isRouting"
+						class="drag-item"
+						draggable="true"
+						@dragstart="dragStart($event, int, index)"
+						@dragend="dragEnd"
+					>
+						Here
+					</div>
+				</div>
 				<div style="min-width: 100%;display: flex;justify-content: start;height: 100%;">
 					<traffic-chart
 						v-if="int.name === this.store.settings.inputWgInterfaceName"
@@ -89,7 +110,10 @@ export default {
 		apexchart: VueApexCharts
 	},
 	data: () => ({
-		settingsModal: false
+		settingsModal: false,
+		draggedItem: null,
+		sourceIndex: null,
+		isDragOver: null,
 	}),
 	methods: {
 		logout() {
@@ -98,6 +122,43 @@ export default {
 						this.$router.push('/login')
 					}
 				)
+		},
+		dragStart(event, item, index) {
+			this.draggedItem = item;
+			this.sourceIndex = index;
+			event.dataTransfer.effectAllowed = 'move';
+			event.dataTransfer.setData('text/plain', JSON.stringify(item));
+		},
+		dragEnd() {
+			this.draggedItem = null;
+			this.sourceIndex = null;
+			this.isDragOver = null;
+		},
+		dragEnter(index) {
+			this.isDragOver = index;
+		},
+		dragLeave(index) {
+			if (this.isDragOver === index) {
+				this.isDragOver = null;
+			}
+		},
+		dragOver(index) {
+			this.isDragOver = index;
+		},
+		dragDrop(targetIndex) {
+			if (this.draggedItem && this.sourceIndex !== targetIndex) {
+				const sourceInterface = this.store.serverData.interfaces[this.sourceIndex];
+				const targetInterface = this.store.serverData.interfaces[targetIndex];
+				sourceInterface.isRouting = false;
+				targetInterface.isRouting = true;
+				this.draggedItem = null;
+				this.sourceIndex = null;
+				this.isDragOver = null;
+				axios.post("/api/v1/change-routing-vpn", this.store.serverData.interfaces[targetIndex])
+					.then((response) => {
+						this.store.serverData = response.data
+					})
+			}
 		}
 	},
 	computed: {
@@ -131,5 +192,25 @@ th {
 
 .col-value {
 	color: rgba(36, 36, 36, 1);
+}
+
+.drag-container {
+	border: 1px solid rgb(185, 185, 185);
+	background-color: rgb(208, 206, 205);
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	padding: 2px;
+	border-radius: 4px;
+	width: 40px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+}
+
+.drag-item {
+	color: var(--q-primary);
+	cursor: grab;
+	font-size: 12px;
 }
 </style>

@@ -107,7 +107,7 @@ export default {
 			})
 		},
 		doubleVpnChange(body){
-			axios.post('/api/v1/change-routing-vpn', body)
+			axios.post('/api/v1/change-routing-peer', body)
 				.then(() => {
 					this.store.fetchData()
 					const peer = this.store.tableData.find((peer) => peer.id === body.id)
