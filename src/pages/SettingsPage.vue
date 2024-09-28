@@ -125,13 +125,13 @@ export default {
 		localWgEndpoint: '',
 		localWgEndpointPort: '51820',
 		localNetwork: '',
+		wanInterfaceName: '',
 		ipAddress: '',
 		allowedAddress: '',
 		endpoint: '',
 		endpointPort: '',
 		publicKey: '',
 		privateKey: '',
-		wanInterfaceName: '',
 		presharedKey: '',
 
 		configFile: null

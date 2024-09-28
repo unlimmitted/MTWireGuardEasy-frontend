@@ -31,7 +31,7 @@
 					dense
 					flat
 					icon="disabled_by_default"
-					@click="this.disableInterface"
+					@click="this.setInterfaceStatus"
 				>
 					<q-tooltip>
 						{{ this.disableInterfaceText }}
@@ -43,7 +43,7 @@
 					style="color: gray"
 					dense
 					flat
-					@click="this.enableInterface"
+					@click="this.setInterfaceStatus"
 				>
 					<q-tooltip>
 						Enable interface
@@ -55,19 +55,23 @@
 </template>
 <script>
 import {useStore} from "../../store.js";
+import axios from "axios";
 
 export default {
 	name: "InterfaceCard",
 	props: ["interface"],
 	methods: {
 		deleteInterface() {
-			console.log("Delete: " + this.interface)
+			axios.post("/api/v1/delete-external-interface", this.interface)
+				.then((response) => {
+					this.store.serverData = response.data
+				})
 		},
-		disableInterface() {
-			console.log("Disable interface: " + this.interface)
-		},
-		enableInterface() {
-			console.log("Enable interface: " + this.interface)
+		setInterfaceStatus() {
+			axios.post("/api/v1/set-interface-status", this.interface)
+				.then((response) => {
+					this.store.serverData = response.data
+				})
 		}
 	},
 	computed: {
@@ -97,9 +101,11 @@ export default {
 	height: 80px;
 	padding: 8px;
 }
+
 .card-section {
 	display: flex;
 }
+
 .edit-btn {
 	position: absolute;
 	top: 8px;

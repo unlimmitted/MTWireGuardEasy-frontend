@@ -1,6 +1,6 @@
 <template>
 	<q-card
-		style="display: flex;flex-direction: column;height: 100%"
+		style="display: flex;flex-direction: column;"
 		:style="this.isMobile ? 'min-width: 100%;' : 'min-width: 560px;'"
 	>
 		<q-card-section
@@ -19,6 +19,26 @@
 		<q-card-section style="height: 100%;overflow: scroll">
 			<q-expansion-item
 				default-opened
+				expand-separator
+				icon="output"
+				label="Outgoing Wireguard interfaces"
+			>
+				<q-card>
+					<q-card-section class="card-grid">
+						<interface-card
+							v-for="wgInterface in this.store.serverData.interfaces"
+							:interface="wgInterface"
+						/>
+						<q-btn
+							@click="this.newInterfaceModal = true"
+							color="primary" style="width: 100%"
+						>
+							Create new interface
+						</q-btn>
+					</q-card-section>
+				</q-card>
+			</q-expansion-item>
+			<q-expansion-item
 				expand-separator
 				icon="input"
 				label="Input Wireguard configuration"
@@ -70,32 +90,23 @@
 					</q-card-section>
 				</q-card>
 			</q-expansion-item>
-			<q-expansion-item
-				expand-separator
-				icon="output"
-				label="Outgoing Wireguard interfaces"
-			>
-				<q-card>
-					<q-card-section class="card-grid">
-						<interface-card
-							v-for="wgInterface in this.store.serverData.interfaces"
-							:interface="wgInterface"
-						/>
-						<q-btn color="primary" style="width: 100%">Create new interface</q-btn>
-					</q-card-section>
-				</q-card>
-			</q-expansion-item>
 		</q-card-section>
 	</q-card>
+	<q-dialog v-model="this.newInterfaceModal">
+		<new-interface-modal
+			@closeModal="this.closeModal"
+		/>
+	</q-dialog>
 </template>
 
 <script>
 import {useStore} from "../../store.js";
 import InterfaceCard from "./InterfaceCard.vue";
+import NewInterfaceModal from "./NewInterfaceModal.vue";
 
 export default {
 	name: "SettingsModal",
-	components: {InterfaceCard},
+	components: {NewInterfaceModal, InterfaceCard},
 	data: () => ({
 		inputWgInterfaceName: '',
 		toVpnAddressList: '',
@@ -103,15 +114,8 @@ export default {
 		inputWgEndpoint: '',
 		localWgEndpointPort: '',
 		localNetworkAddress: '',
-		ipAddress: '',
-		allowedAddress: '',
-		endpoint: '',
-		endpointPort: '',
-		publicKey: '',
-		privateKey: '',
 		wanInterfaceName: '',
-		presharedKey: '',
-		vpnChainMode: null
+		newInterfaceModal: false
 	}),
 	created() {
 		this.inputWgInterfaceName = this.store.settings.inputWgInterfaceName
@@ -120,15 +124,12 @@ export default {
 		this.inputWgEndpoint = this.store.settings.inputWgEndpoint
 		this.localWgEndpointPort = this.store.settings.inputWgEndpointPort
 		this.localNetworkAddress = this.store.settings.localNetwork
-		this.ipAddress = this.store.settings.ipAddress
-		this.allowedAddress = this.store.settings.allowedAddress
-		this.endpoint = this.store.settings.endpoint
-		this.endpointPort = this.store.settings.endpointPort
-		this.publicKey = this.store.settings.publicKey
-		this.privateKey = this.store.settings.privateKey
 		this.wanInterfaceName = this.store.settings.wanInterfaceName
-		this.presharedKey = this.store.settings.presharedKey
-		this.vpnChainMode = this.store.settings.vpnChainMode
+	},
+	methods: {
+		closeModal() {
+			this.newInterfaceModal = false
+		}
 	},
 	computed: {
 		isMobile() {
