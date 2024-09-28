@@ -15,8 +15,7 @@ export const useStore = defineStore('store', {
 				name: 'ip',
 				align: 'center',
 				label: 'IP Address',
-				field: 'allowedAddress',
-				sortable: true
+				field: 'allowedAddress'
 			},
 			{
 				name: 'last-handshake',

@@ -4,7 +4,7 @@
 		:style="this.isMobile ? '' : 'height: 100%;display: flex;flex-direction: column;overflow-x: hidden;overflow-y: scroll;'"
 	>
 		<div class="server-info">
-			Server info
+			MikroTik info
 		</div>
 		<div style="margin-bottom: 8px">
 			<table>
@@ -88,7 +88,7 @@
 				style="width: 100%;margin-right: 8px"
 				@click="this.settingsModal = !this.settingsModal"
 			>
-				Settings
+				Routing
 			</q-btn>
 			<q-btn icon="logout" color="primary" @click="this.logout"/>
 		</div>
