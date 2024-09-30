@@ -24,7 +24,7 @@
 				label="Outgoing Wireguard interfaces"
 			>
 				<q-card>
-					<q-card-section class="card-grid">
+					<q-card-section class="card-grid" :style="this.$q.screen.width < 520 ? 'display: unset;' : ''">
 						<interface-card
 							v-for="wgInterface in this.store.serverData.interfaces"
 							:interface="wgInterface"

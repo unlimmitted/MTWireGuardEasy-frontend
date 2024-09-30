@@ -24,6 +24,7 @@
 								type="password"
 								:rules="[val => (val && val.length > 0) || 'Required field']"
 							/>
+							<q-checkbox v-model="this.rememberMe" label="Remember me"/>
 						</q-card-section>
 						<q-card-actions>
 							<q-btn
@@ -50,8 +51,17 @@ export default {
 	data: () => ({
 		login: '',
 		password: '',
-		loginAccept: false
+		loginAccept: false,
+		rememberMe: false
 	}),
+	created() {
+		if (localStorage.getItem("authData")) {
+			const data = JSON.parse(localStorage.getItem("authData"))
+			this.rememberMe = data.rememberMe
+			this.login = atob(data.login)
+			this.password = atob(data.password)
+		}
+	},
 	methods: {
 		auth() {
 			axios.post(`/auth/login?username=${this.login}&password=${this.password}`)
@@ -59,6 +69,16 @@ export default {
 					axios.get("/auth/status").then(res => {
 						if (res.data.authenticated) {
 							this.loginAccept = true;
+							if (this.rememberMe) {
+								const data = {
+									rememberMe: this.rememberMe,
+									login: btoa(this.login),
+									password: btoa(this.password),
+								}
+								localStorage.setItem("authData", JSON.stringify(data));
+							} else {
+								localStorage.removeItem("authData");
+							}
 							this.$router.push('/')
 						} else {
 							this.login = ''

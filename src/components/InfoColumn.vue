@@ -1,7 +1,7 @@
 <template>
 	<q-card class="shadow-1 createBox">
 		<div class="title">
-			MT WireGuard Easy
+			MikroTik WireGuard Easy
 		</div>
 		<q-input
 			v-model="this.wgPeerName"
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import ServerInfo from "./info-column/ServerInfo.vue"
+import ServerInfo from "./info-column/MikroTikInfo.vue"
 import axios from "axios"
 import {useStore} from "../store.js"
 
@@ -83,16 +83,11 @@ export default {
 	width: 100%;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	font-size: 1.8rem;
+	font-size: 19px;
 }
 
 .createBox {
 	padding: 8px;
 	margin-bottom: 8px;
-}
-
-.chart {
-	display: flex;
-	justify-content: center;
 }
 </style>

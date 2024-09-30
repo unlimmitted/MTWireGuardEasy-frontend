@@ -1,6 +1,6 @@
 <template>
 	<q-card>
-		<div class="interface-card">
+		<div class="interface-card" :style="this.$q.screen.width < 520 ? 'width: 100%;': ''">
 			<div class="card-section">
 				Name: {{ interface.name }}
 			</div>

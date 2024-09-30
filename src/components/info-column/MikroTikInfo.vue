@@ -19,14 +19,14 @@
 			</table>
 		</div>
 		<div class="server-info">
-			WG Interfaces
+			WireGuard Interfaces
 		</div>
 		<div style="overflow: scroll;height: 100%">
 			<div
-				v-for="(int, index) in this.store.serverData.interfaces"
+				v-for="(int, index) in this.getActualInterfaces"
 				style="display: flex;flex-direction: row;flex-wrap: wrap;position: relative"
 			>
-				<div v-if="!int.disabled" style="width: 100%">
+				<div style="width: 100%">
 					<table>
 						<tr>
 							<th>Interface name:</th>
@@ -50,7 +50,8 @@
 						</tr>
 					</table>
 					<div
-						v-if="int.name !== store.settings.inputWgInterfaceName"
+						v-if="int.name !== this.store.settings.inputWgInterfaceName &&
+						this.store.serverData.interfaces.filter(it => !it.disabled && it.name !== this.store.settings.inputWgInterfaceName).length > 1"
 						:id="'drag-' + index"
 						class="drag-container shadow-1"
 						:style="int.isRouting ? 'opacity: 1;' : this.isDragOver === index ? '' : 'opacity: 0.6;'"
@@ -68,6 +69,9 @@
 							@dragend="dragEnd"
 						>
 							Here
+							<q-tooltip>
+								WireGuard routes to this interface
+							</q-tooltip>
 						</div>
 					</div>
 					<div
@@ -167,6 +171,9 @@ export default {
 	computed: {
 		isMobile() {
 			return this.$q.screen.width < 1180
+		},
+		getActualInterfaces() {
+			return this.store.serverData.interfaces.filter(it => !it.disabled)
 		}
 	},
 	setup() {
@@ -198,12 +205,11 @@ th {
 }
 
 .drag-container {
-	border: 1px solid rgb(185, 185, 185);
+	border: 1px solid black;
 	background-color: rgb(208, 206, 205);
 	position: absolute;
 	top: 8px;
 	right: 8px;
-	padding: 2px;
 	border-radius: 4px;
 	width: 40px;
 	height: 24px;
@@ -212,8 +218,15 @@ th {
 }
 
 .drag-item {
-	color: var(--q-primary);
+	color: white;
 	cursor: grab;
 	font-size: 12px;
+	background-color: var(--q-primary);
+	width: 100%;
+	height: 100%;
+	border-radius: 4px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>
