@@ -1,6 +1,6 @@
 <template>
 	<q-card
-		style="min-width: 400px;"
+		class="new-interface-modal"
 	>
 		<q-card-section style="display: flex;justify-content: space-between;align-items: center;font-size: 18px;">
 			Add new interface
@@ -220,5 +220,17 @@ export default {
 </script>
 
 <style scoped>
+.new-interface-modal {
+	width: min(520px, calc(100vw - 32px));
+	max-width: 100%;
+	max-height: calc(100vh - 32px);
+	overflow-y: auto;
+}
 
+@media (max-width: 520px) {
+	.new-interface-modal {
+		width: calc(100vw - 16px);
+		max-height: calc(100vh - 16px);
+	}
+}
 </style>

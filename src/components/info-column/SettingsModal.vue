@@ -1,11 +1,9 @@
 <template>
 	<q-card
-		style="display: flex;flex-direction: column;"
-		:style="this.isMobile ? 'min-width: 100%;' : 'min-width: 560px;'"
+		class="routing-modal"
 	>
 		<q-card-section
-			style="width: 100%;flex-wrap: nowrap;display: flex;align-items: center"
-			class="justify-between text-h5"
+			class="routing-header justify-between text-h5"
 		>
 			Routing
 			<q-btn
@@ -16,7 +14,7 @@
 				v-close-popup
 			/>
 		</q-card-section>
-		<q-card-section style="height: 100%;overflow: scroll">
+		<q-card-section class="routing-content">
 			<q-expansion-item
 				default-opened
 				expand-separator
@@ -24,9 +22,10 @@
 				label="Outgoing Wireguard interfaces"
 			>
 				<q-card>
-					<q-card-section class="card-grid" :style="this.$q.screen.width < 520 ? 'display: unset;' : ''">
+					<q-card-section class="card-grid">
 						<interface-card
 							v-for="wgInterface in this.store.serverData.interfaces"
+							:key="wgInterface.name"
 							:interface="wgInterface"
 						/>
 						<q-btn
@@ -145,9 +144,53 @@ export default {
 
 <style scoped>
 .card-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+	padding: 12px;
+}
+
+.routing-modal {
 	display: flex;
-	flex-flow: wrap;
-	gap: 8px;
-	justify-content: center;
+	flex-direction: column;
+	width: min(920px, calc(100vw - 32px));
+	max-width: 100%;
+	max-height: calc(100vh - 32px);
+}
+
+.routing-header {
+	width: 100%;
+	flex-wrap: nowrap;
+	display: flex;
+	align-items: center;
+	padding: 16px;
+}
+
+.routing-content {
+	min-height: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 8px 16px 16px;
+}
+
+@media (max-width: 640px) {
+	.routing-modal {
+		width: calc(100vw - 16px);
+		max-height: calc(100vh - 16px);
+	}
+
+	.routing-header {
+		padding: 12px;
+	}
+
+	.routing-content {
+		padding: 4px 8px 12px;
+	}
+
+	.card-grid {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 8px;
+		padding: 8px;
+	}
 }
 </style>

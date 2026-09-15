@@ -17,13 +17,7 @@ const router = createRouter({
 				store.fetchRouterSettings()
 					.then(() => {
 						if (store.settings) {
-							store.fetchData()
-								.then(() => {
-									return store.fetchRouterInfo()
-								})
-								.then(() => {
-									return store.fetchTrafficForInterface()
-								})
+							store.fetchTrafficForInterface()
 								.then(() => {
 									next()
 								})

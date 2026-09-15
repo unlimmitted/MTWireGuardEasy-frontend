@@ -1,7 +1,6 @@
 <template>
 	<div
 		class="layout"
-		:style="this.isMobile ? 'overflow: scroll': ''"
 	>
 		<router-view/>
 	</div>
@@ -22,7 +21,7 @@ export default {
 <style scoped>
 .layout {
 	background-color: rgba(243, 243, 243, 1) !important;
-	height: 100vh;
-	overflow: hidden;
+	min-height: 100vh;
+	overflow-x: hidden;
 }
 </style>

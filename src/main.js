@@ -4,11 +4,13 @@ import {Notify, Quasar} from 'quasar'
 import '@quasar/extras/material-icons/material-icons.css'
 
 import 'quasar/src/css/index.sass'
+import './style.css'
 
 import App from './App.vue'
 import router from "./router.js";
 import {createPinia} from "pinia";
 import CanvasJSChart from '@canvasjs/vue-charts';
+import axios from 'axios';
 
 const pinia = createPinia()
 
@@ -20,4 +22,6 @@ myApp.use(Quasar, {
 	},
 })
 
-myApp.mount('#app')
+axios.get('/auth/csrf')
+	.catch(() => undefined)
+	.finally(() => myApp.mount('#app'))

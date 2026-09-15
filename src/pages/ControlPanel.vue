@@ -1,17 +1,15 @@
 <template>
 	<div
 		class="container"
-		:style="this.isMobile ? 'flex-direction: column' : ''"
+		:class="{ 'container--mobile': isMobile }"
 	>
 		<div
 			class="infoColumn"
-			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;': 'padding: 0 20px 0 0;'"
 		>
 			<info-column/>
 		</div>
 		<div
 			class="tableColumn"
-			:style="this.isMobile ? 'width: 100%;margin-bottom: 8px;margin-top: 0;': ''"
 		>
 			<table-column/>
 		</div>
@@ -54,14 +52,43 @@ export default {
 	background-size: 20px 20px;
 	padding: 16px;
 	height: 100vh;
+	box-sizing: border-box;
+	gap: 16px;
+	overflow: hidden;
 }
 .infoColumn {
 	display: flex;
 	flex-direction: column;
-	width: 20%;
-	min-width: 300px !important;
+	flex: 0 0 clamp(340px, 24vw, 460px);
+	width: auto;
+	min-width: 0;
+	min-height: 0;
 }
 .tableColumn {
-	width: 80%;
+	flex: 1 1 auto;
+	width: auto;
+	min-width: 0;
+	min-height: 0;
+}
+
+.container--mobile {
+	flex-direction: column;
+	height: auto;
+	min-height: 100vh;
+	gap: 8px;
+	overflow: visible;
+}
+
+.container--mobile .infoColumn,
+.container--mobile .tableColumn {
+	flex: 0 0 auto;
+	width: 100%;
+	min-width: 0 !important;
+}
+
+@media (max-width: 600px) {
+	.container {
+		padding: 8px;
+	}
 }
 </style>

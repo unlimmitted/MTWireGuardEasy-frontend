@@ -56,24 +56,32 @@ export default {
 	}),
 	created() {
 		if (localStorage.getItem("authData")) {
-			const data = JSON.parse(localStorage.getItem("authData"))
-			this.rememberMe = data.rememberMe
-			this.login = atob(data.login)
-			this.password = atob(data.password)
+			try {
+				const data = JSON.parse(localStorage.getItem("authData"))
+				this.rememberMe = Boolean(data.rememberMe)
+				this.login = data.login ? atob(data.login) : ''
+			} catch {
+				localStorage.removeItem("authData")
+			}
 		}
 	},
 	methods: {
 		auth() {
-			axios.post(`/auth/login?username=${this.login}&password=${this.password}`)
+			this.loginAccept = true
+			const credentials = new URLSearchParams({
+				username: this.login,
+				password: this.password
+			})
+			axios.post('/auth/login', credentials, {
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			})
 				.then(() => {
-					axios.get("/auth/status").then(res => {
+					return axios.get('/auth/csrf').then(() => axios.get("/auth/status")).then(res => {
 						if (res.data.authenticated) {
-							this.loginAccept = true;
 							if (this.rememberMe) {
 								const data = {
 									rememberMe: this.rememberMe,
-									login: btoa(this.login),
-									password: btoa(this.password),
+									login: btoa(this.login)
 								}
 								localStorage.setItem("authData", JSON.stringify(data));
 							} else {
@@ -93,6 +101,13 @@ export default {
 							})
 						}
 					})
+				})
+				.catch(() => {
+					this.password = ''
+					this.$q.notify({message: 'Invalid login details', type: 'negative', position: 'top-right'})
+				})
+				.finally(() => {
+					this.loginAccept = false
 				})
 		}
 	}

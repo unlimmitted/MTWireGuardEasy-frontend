@@ -1,14 +1,17 @@
 <template>
 	<q-card>
-		<div class="interface-card" :style="this.$q.screen.width < 520 ? 'width: 100%;': ''">
+		<div class="interface-card">
 			<div class="card-section">
-				Name: {{ interface.name }}
+				<span class="field-label">Name:</span>
+				<span class="field-value">{{ interface.name }}</span>
 			</div>
 			<div class="card-section">
-				Port: {{ interface.listenPort }}
+				<span class="field-label">Port:</span>
+				<span class="field-value">{{ interface.listenPort }}</span>
 			</div>
 			<div class="card-section">
-				Disabled: {{ interface.disabled }}
+				<span class="field-label">Disabled:</span>
+				<span class="field-value">{{ interface.disabled }}</span>
 			</div>
 			<div class="edit-btn">
 				<q-btn
@@ -122,13 +125,28 @@ export default {
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	width: 200px;
-	height: 80px;
-	padding: 8px;
+	width: 100%;
+	min-width: 0;
+	min-height: 112px;
+	padding: 12px 52px 12px 12px;
+	gap: 4px;
 }
 
 .card-section {
-	display: flex;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 8px;
+	min-width: 0;
+}
+
+.field-label {
+	white-space: nowrap;
+}
+
+.field-value {
+	min-width: 0;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .edit-btn {
