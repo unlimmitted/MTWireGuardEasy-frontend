@@ -18,7 +18,7 @@
 			Create WG peer
 		</q-btn>
 	</q-card>
-	<ServerInfo/>
+	<ServerInfo @open-peer="$emit('open-peer', $event)"/>
 </template>
 
 <script>
@@ -27,6 +27,7 @@ import axios from "axios"
 import {useStore} from "../store.js"
 
 export default {
+	emits: ['open-peer'],
 	components: {
 		ServerInfo
 	},

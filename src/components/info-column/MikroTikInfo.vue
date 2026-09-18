@@ -85,7 +85,7 @@
             <q-icon v-else name="drag_indicator" size="16px" class="drag-placeholder"/>
           </div>
           <div v-if="int.name === this.store.settings.inputWgInterfaceName" class="chart-wrap">
-            <traffic-chart/>
+            <traffic-chart @open-peer="$emit('open-peer', $event)"/>
           </div>
           <q-separator v-if="index < getActualInterfaces.length - 1"
                        style="margin: 8px 0 8px 0"/>
@@ -124,6 +124,7 @@ import VueApexCharts from "vue3-apexcharts";
 import TrafficChart from "./TrafficChart.vue";
 
 export default {
+	emits: ['open-peer'],
   components: {
     TrafficChart,
     SettingsModal,

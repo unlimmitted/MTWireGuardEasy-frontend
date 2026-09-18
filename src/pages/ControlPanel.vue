@@ -6,12 +6,12 @@
 		<div
 			class="infoColumn"
 		>
-			<info-column/>
+			<info-column @open-peer="openPeer"/>
 		</div>
 		<div
 			class="tableColumn"
 		>
-			<table-column/>
+			<table-column ref="peerTable"/>
 		</div>
 	</div>
 </template>
@@ -29,7 +29,9 @@ export default {
 
 	}),
 	methods: {
-
+		openPeer(peerId) {
+			this.$refs.peerTable?.openPeerById(peerId)
+		}
 	},
 	computed: {
 		isMobile() {

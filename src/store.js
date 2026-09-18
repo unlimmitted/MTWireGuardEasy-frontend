@@ -124,9 +124,64 @@ export const useStore = defineStore('store', {
 		},
 		settings: {},
 		trafficData: [],
-		etherInterfaces: []
+		etherInterfaces: [],
+		peerTrafficActivity: {},
+		dominantTrafficPeerId: null
 	}),
+	getters: {
+		dominantTrafficPeer(state) {
+			if (!state.dominantTrafficPeerId) return null
+			return state.tableData.find(peer => peer.id === state.dominantTrafficPeerId) || null
+		}
+	},
 	actions: {
+		updatePeers(peers, trackTraffic = false) {
+			const nextPeers = Array.isArray(peers) ? peers : []
+			const nextActivity = {}
+
+			nextPeers.forEach(peer => {
+				if (!peer?.id) return
+				const previous = this.peerTrafficActivity[peer.id]
+				const rx = numericValue(peer.rx)
+				const tx = numericValue(peer.tx)
+				let samples = previous?.samples || []
+
+				if (trackTraffic && previous) {
+					const rxDelta = rx >= previous.rx ? rx - previous.rx : rx
+					const txDelta = tx >= previous.tx ? tx - previous.tx : tx
+					samples = [...samples, rxDelta + txDelta].slice(-6)
+				}
+
+				nextActivity[peer.id] = {rx, tx, samples}
+			})
+
+			this.peerTrafficActivity = nextActivity
+			this.tableData = nextPeers
+			this.updateDominantTrafficPeer()
+		},
+		updateDominantTrafficPeer() {
+			const ranked = Object.entries(this.peerTrafficActivity)
+				.map(([peerId, activity]) => ({
+					peerId,
+					traffic: activity.samples.reduce((sum, value) => sum + value, 0),
+					sampleCount: activity.samples.length
+				}))
+				.filter(item => item.sampleCount >= 2 && item.traffic > 0)
+				.sort((a, b) => b.traffic - a.traffic)
+
+			if (!ranked.length) {
+				this.dominantTrafficPeerId = null
+				return
+			}
+
+			const leader = ranked[0]
+			const runnerUp = ranked[1]?.traffic || 0
+			const total = ranked.reduce((sum, item) => sum + item.traffic, 0)
+			const hasClearLead = leader.traffic / total >= 0.5 &&
+				(runnerUp === 0 || leader.traffic >= runnerUp * 1.5)
+
+			this.dominantTrafficPeerId = hasClearLead ? leader.peerId : null
+		},
 		fetchRouterInfo() {
 			return axios.get('/api/v1/get-mikrotik-info')
 				.then(response => {
@@ -142,7 +197,7 @@ export const useStore = defineStore('store', {
 		fetchData() {
 			return axios.get('/api/v1/get-wg-peers')
 				.then(response => {
-					this.tableData = response.data
+					this.updatePeers(response.data)
 				})
 		},
 		fetchTrafficForInterface() {

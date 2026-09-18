@@ -1,8 +1,55 @@
 <template>
   <q-card class="peer-modal">
     <q-toolbar class="peer-toolbar">
-      <div class="peer-title" :title="peerDetails.name">Peer: {{ peerDetails.name }}</div>
-      <q-btn flat round icon="close" v-close-popup/>
+      <button
+          v-if="!editingName"
+          type="button"
+          class="peer-title"
+          :title="`Rename ${peerDetails.name}`"
+          @click="beginRename"
+      >
+        <span>Peer: {{ peerDetails.name }}</span>
+        <q-icon name="edit" class="peer-title-edit" aria-hidden="true"/>
+      </button>
+      <div v-else class="peer-title-editor">
+        <q-input
+            ref="nameInput"
+            v-model="editedName"
+            class="peer-title-input"
+            dense
+            outlined
+            maxlength="64"
+            :disable="savingName"
+            aria-label="Peer name"
+            @keyup.enter="saveName"
+            @keyup.esc="cancelRename"
+        />
+        <q-btn
+            round
+            dense
+            unelevated
+            color="primary"
+            icon="check"
+            :disable="!canSaveName"
+            :loading="savingName"
+            aria-label="Save peer name"
+            @click="saveName"
+        >
+          <q-tooltip>Save</q-tooltip>
+        </q-btn>
+        <q-btn
+            round
+            dense
+            flat
+            icon="close"
+            :disable="savingName"
+            aria-label="Cancel renaming"
+            @click="cancelRename"
+        >
+          <q-tooltip>Cancel</q-tooltip>
+        </q-btn>
+      </div>
+      <q-btn v-if="!editingName" flat round icon="close" aria-label="Close" v-close-popup/>
     </q-toolbar>
 
     <q-card-section class="peer-modal-content">
@@ -22,7 +69,7 @@
             Copy config text
           </q-btn>
           <div v-if="store.settings.vpnChainMode" class="double-vpn">
-            Double VPN
+            {{ store.settings.doubleVpnInverted ? 'Bypass Double VPN' : 'Double VPN' }}
             <q-toggle
                 v-model="doubleVpn"
                 color="primary"
@@ -44,14 +91,68 @@
 import QrcodeVue from 'qrcode.vue'
 import {useStore} from '../../store.js'
 import PeerTrafficChart from './PeerTrafficChart.vue'
+import axios from 'axios'
 
 export default {
   components: {PeerTrafficChart, QrcodeVue},
+  emits: ['deletePeer', 'doubleVpn', 'peer-renamed'],
   props: ['peerConfig', 'peerDetails'],
   data: () => ({
-    doubleVpn: false
+    doubleVpn: false,
+    editingName: false,
+    editedName: '',
+    savingName: false
   }),
+  computed: {
+    normalizedName() {
+      return this.editedName.trim()
+    },
+    canSaveName() {
+      return !this.savingName &&
+          this.normalizedName.length > 0 &&
+          this.normalizedName.length <= 64 &&
+          this.normalizedName !== this.peerDetails.name &&
+          !/[\r\n"';]/.test(this.normalizedName)
+    }
+  },
   methods: {
+    beginRename() {
+      this.editedName = this.peerDetails.name || ''
+      this.editingName = true
+      this.$nextTick(() => this.$refs.nameInput?.focus())
+    },
+    cancelRename() {
+      if (this.savingName) return
+      this.editedName = this.peerDetails.name || ''
+      this.editingName = false
+    },
+    async saveName() {
+      if (!this.canSaveName) return
+      this.savingName = true
+      try {
+        const response = await axios.post('/api/v1/rename-peer', {
+          id: this.peerDetails.id,
+          name: this.normalizedName
+        })
+        this.store.updatePeers(response.data)
+        const renamedPeer = response.data.find(peer => peer.id === this.peerDetails.id)
+        if (renamedPeer) this.$emit('peer-renamed', renamedPeer)
+        this.editingName = false
+        this.$q.notify({
+          message: 'Peer successfully renamed',
+          type: 'positive',
+          position: 'top-right'
+        })
+      } catch (error) {
+        this.$q.notify({
+          message: error.response?.data?.error || 'Unable to rename peer',
+          type: 'negative',
+          position: 'top-right'
+        })
+      } finally {
+        this.savingName = false
+      }
+    },
     downloadConfig() {
       const url = window.URL.createObjectURL(new Blob([this.peerConfig]))
       const link = document.createElement('a')
@@ -82,6 +183,7 @@ export default {
   },
   created() {
     this.doubleVpn = this.peerDetails.doubleVpn
+    this.editedName = this.peerDetails.name || ''
   },
   setup() {
     const store = useStore()
@@ -100,15 +202,62 @@ export default {
 
 .peer-toolbar {
   justify-content: space-between;
+  gap: 8px;
   padding: 8px 16px 0;
 }
 
 .peer-title {
   min-width: 0;
+  max-width: calc(100% - 44px);
+  padding: 4px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  overflow: hidden;
+  font-size: 1.25rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.18s;
+}
+
+.peer-title span {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 1.25rem;
+}
+
+.peer-title:hover,
+.peer-title:focus-visible {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.peer-title:focus-visible {
+  outline: 2px solid rgba(255, 59, 48, 0.25);
+}
+
+.peer-title-edit {
+  flex: 0 0 auto;
+  color: #6c6c6c;
+  font-size: 17px;
+}
+
+.peer-title-editor {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.peer-title-input {
+  min-width: 0;
+  flex: 1;
 }
 
 .peer-modal-content {

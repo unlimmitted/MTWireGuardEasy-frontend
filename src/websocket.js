@@ -1,10 +1,12 @@
 import SockJS from "sockjs-client/dist/sockjs"
 import {Stomp} from '@stomp/stompjs'
 import {useStore} from './store'
+import axios from 'axios'
 
 let stompClient = null
 
 export function connect() {
+	if (stompClient?.connected) return
 	stompClient = Stomp.over(function () {
 		return new SockJS('/ws')
 	})
@@ -20,7 +22,16 @@ export function connect() {
 		stompClient.subscribe('/topic/trafficInInterface/',
 			message => getTrafficInInterface(message)
 		)
+	}, () => {
+		axios.get('/auth/status').catch(() => undefined)
 	})
+}
+
+export function disconnect() {
+	if (stompClient?.connected) {
+		stompClient.disconnect()
+	}
+	stompClient = null
 }
 
 function getInterfaces(message) {
@@ -28,7 +39,7 @@ function getInterfaces(message) {
 }
 
 function getPeers(message) {
-	useStore().tableData = JSON.parse(message.body)
+	useStore().updatePeers(JSON.parse(message.body), true)
 }
 
 function getTrafficInInterface(message) {

@@ -16,6 +16,34 @@
 		</q-card-section>
 		<q-card-section class="routing-content">
 			<q-expansion-item
+				v-if="this.store.settings.vpnChainMode"
+				default-opened
+				expand-separator
+				icon="swap_horiz"
+				label="Double VPN routing"
+			>
+				<q-card>
+					<q-card-section class="inversion-setting">
+						<div class="inversion-copy">
+							<div class="inversion-title">Invert Double VPN selection</div>
+							<div class="inversion-description">
+								{{ doubleVpnInverted
+									? 'All peers use Double VPN except peers marked for bypass.'
+									: 'Only peers with Double VPN enabled use the outgoing tunnel.' }}
+							</div>
+						</div>
+						<q-toggle
+							v-model="doubleVpnInverted"
+							color="primary"
+							:loading="savingDoubleVpnInversion"
+							:disable="savingDoubleVpnInversion"
+							aria-label="Invert Double VPN selection"
+							@update:model-value="saveDoubleVpnInversion"
+						/>
+					</q-card-section>
+				</q-card>
+			</q-expansion-item>
+			<q-expansion-item
 				default-opened
 				expand-separator
 				icon="output"
@@ -102,6 +130,7 @@
 import {useStore} from "../../store.js";
 import InterfaceCard from "./InterfaceCard.vue";
 import NewInterfaceModal from "./NewInterfaceModal.vue";
+import axios from "axios";
 
 export default {
 	name: "SettingsModal",
@@ -114,7 +143,9 @@ export default {
 		localWgEndpointPort: '',
 		localNetworkAddress: '',
 		wanInterfaceName: '',
-		newInterfaceModal: false
+		newInterfaceModal: false,
+		doubleVpnInverted: false,
+		savingDoubleVpnInversion: false
 	}),
 	created() {
 		this.inputWgInterfaceName = this.store.settings.inputWgInterfaceName
@@ -124,8 +155,31 @@ export default {
 		this.localWgEndpointPort = this.store.settings.inputWgEndpointPort
 		this.localNetworkAddress = this.store.settings.localNetwork
 		this.wanInterfaceName = this.store.settings.wanInterfaceName
+		this.doubleVpnInverted = Boolean(this.store.settings.doubleVpnInverted)
 	},
 	methods: {
+		async saveDoubleVpnInversion(inverted) {
+			this.savingDoubleVpnInversion = true
+			try {
+				const response = await axios.post('/api/v1/set-double-vpn-inversion', {inverted})
+				this.store.settings = response.data
+				await this.store.fetchData()
+				this.$q.notify({
+					message: inverted ? 'Double VPN selection inverted' : 'Standard Double VPN selection restored',
+					type: 'positive',
+					position: 'top-right'
+				})
+			} catch (error) {
+				this.doubleVpnInverted = !inverted
+				this.$q.notify({
+					message: error.response?.data?.error || 'Unable to change Double VPN routing',
+					type: 'negative',
+					position: 'top-right'
+				})
+			} finally {
+				this.savingDoubleVpnInversion = false
+			}
+		},
 		closeModal() {
 			this.newInterfaceModal = false
 		}
@@ -148,6 +202,30 @@ export default {
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 12px;
 	padding: 12px;
+}
+
+.inversion-setting {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 14px 16px;
+}
+
+.inversion-copy {
+	min-width: 0;
+}
+
+.inversion-title {
+	font-size: 1rem;
+	color: #242424;
+}
+
+.inversion-description {
+	margin-top: 3px;
+	color: #6c6c6c;
+	font-size: 0.78rem;
+	line-height: 1.35;
 }
 
 .routing-modal {

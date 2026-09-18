@@ -37,7 +37,22 @@
           @click="this.openPeerDetails(props.row)"
       >
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.value }}
+          <span
+              v-if="col.name === 'name'"
+              class="peer-name-cell"
+              :class="{'peer-name-cell--warning': props.row.id === this.store.dominantTrafficPeerId}"
+          >
+            <q-icon
+                v-if="props.row.id === this.store.dominantTrafficPeerId"
+                name="warning_amber"
+                class="traffic-warning"
+                aria-label="Highest traffic load"
+            >
+              <q-tooltip>Highest traffic load</q-tooltip>
+            </q-icon>
+            <span>{{ col.value }}</span>
+          </span>
+          <template v-else>{{ col.value }}</template>
         </q-td>
       </q-tr>
       <q-inner-loading
@@ -56,6 +71,7 @@
         @closeModal="this.closeModal"
         @deletePeer="this.deletePeer($event)"
         @doubleVpn="this.doubleVpnChange($event)"
+        @peer-renamed="this.peerRenamed($event)"
     />
   </q-dialog>
 </template>
@@ -76,10 +92,18 @@ export default {
     isLoading: true
   }),
   methods: {
+    openPeerById(peerId) {
+      const peer = this.store.tableData.find(item => item.id === peerId)
+      if (peer) this.openPeerDetails(peer)
+    },
     openPeerDetails(row) {
       this.showPeerDetails = true
       this.peerDetails = row
-      this.peerConfig = `
+
+      this.peerConfig = this.createPeerConfig(row)
+    },
+    createPeerConfig(row) {
+      return `
 			  |[Interface]
 			  |PrivateKey = ${row.privateKey}
 			  |Address = ${row.allowedAddress}
@@ -90,6 +114,10 @@ export default {
 			  |AllowedIPs = 0.0.0.0/0, ::/0
 			  |Endpoint = ${this.store.settings.inputWgEndpoint}:${this.store.settings.inputWgEndpointPort}
 			  |PersistentKeepalive = 0`.stripMargin()
+    },
+    peerRenamed(peer) {
+      this.peerDetails = peer
+      this.peerConfig = this.createPeerConfig(peer)
     },
     closeModal() {
       this.showPeerDetails = false
@@ -110,11 +138,13 @@ export default {
     },
     doubleVpnChange(body) {
       axios.post('/api/v1/change-routing-peer', body)
-          .then(() => {
-            this.store.fetchData()
-            const peer = this.store.tableData.find((peer) => peer.id === body.id)
+          .then((response) => {
+            this.store.updatePeers(response.data)
+            const peer = response.data.find((peer) => peer.id === body.id)
+            if (peer) this.peerDetails = peer
+            const prefix = this.store.settings.doubleVpnInverted ? 'Double VPN bypass' : 'Double VPN'
             this.$q.notify({
-              message: peer.doubleVpn ? 'Double VPN OFF' : 'Double VPN ON',
+              message: `${prefix} ${peer?.doubleVpn ? 'ON' : 'OFF'}`,
               type: 'positive',
               position: 'top-right',
               actions: [{
@@ -139,6 +169,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.peer-name-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.peer-name-cell--warning {
+  display: inline-grid;
+  grid-template-columns: 20px minmax(0, auto) 20px;
+}
+
+.peer-name-cell--warning::after {
+  width: 20px;
+  content: '';
+}
+
+.traffic-warning {
+  flex: 0 0 auto;
+  color: var(--q-primary);
+  font-size: 20px;
+}
+
 .my-sticky-header-table {
   height: calc(100vh - 80px);
 
