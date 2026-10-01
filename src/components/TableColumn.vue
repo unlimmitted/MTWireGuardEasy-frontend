@@ -34,6 +34,7 @@
           v-if="this.store.tableData.length !== 0"
           style="cursor: pointer"
           :props="props"
+          :class="{'peer-row--disabled': props.row.disabled}"
           @click="this.openPeerDetails(props.row)"
       >
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
@@ -72,6 +73,7 @@
         @deletePeer="this.deletePeer($event)"
         @doubleVpn="this.doubleVpnChange($event)"
         @peer-renamed="this.peerRenamed($event)"
+        @peer-status-changed="this.peerStatusChanged($event)"
     />
   </q-dialog>
 </template>
@@ -116,6 +118,10 @@ export default {
 			  |PersistentKeepalive = 0`.stripMargin()
     },
     peerRenamed(peer) {
+      this.peerDetails = peer
+      this.peerConfig = this.createPeerConfig(peer)
+    },
+    peerStatusChanged(peer) {
       this.peerDetails = peer
       this.peerConfig = this.createPeerConfig(peer)
     },
@@ -169,6 +175,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.peer-row--disabled > td) {
+  background: #eeeeee !important;
+  color: #777777 !important;
+}
+
+:deep(.peer-row--disabled:hover > td) {
+  background: #e3e3e3 !important;
+}
+
 .peer-name-cell {
   display: inline-flex;
   align-items: center;

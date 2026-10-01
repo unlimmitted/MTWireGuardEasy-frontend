@@ -160,13 +160,14 @@ export const useStore = defineStore('store', {
 			this.updateDominantTrafficPeer()
 		},
 		updateDominantTrafficPeer() {
+			const peerById = new Map(this.tableData.map(peer => [peer.id, peer]))
 			const ranked = Object.entries(this.peerTrafficActivity)
 				.map(([peerId, activity]) => ({
 					peerId,
 					traffic: activity.samples.reduce((sum, value) => sum + value, 0),
 					sampleCount: activity.samples.length
 				}))
-				.filter(item => item.sampleCount >= 2 && item.traffic > 0)
+				.filter(item => item.sampleCount >= 2 && item.traffic > 0 && !peerById.get(item.peerId)?.disabled)
 				.sort((a, b) => b.traffic - a.traffic)
 
 			if (!ranked.length) {

@@ -68,13 +68,24 @@
           <q-btn icon="content_copy" outlined @click="copyConfig">
             Copy config text
           </q-btn>
-          <div v-if="store.settings.vpnChainMode" class="double-vpn">
-            {{ store.settings.doubleVpnInverted ? 'Bypass Double VPN' : 'Double VPN' }}
-            <q-toggle
-                v-model="doubleVpn"
-                color="primary"
-                @click="changeDoubleVpn"
-            />
+          <div class="peer-toggle-row" :class="{'peer-toggle-row--single': !store.settings.vpnChainMode}">
+            <div v-if="store.settings.vpnChainMode" class="peer-toggle">
+              <span>{{ store.settings.doubleVpnInverted ? 'Bypass Double VPN' : 'Double VPN' }}</span>
+              <q-toggle
+                  v-model="doubleVpn"
+                  color="primary"
+                  @click="changeDoubleVpn"
+              />
+            </div>
+            <div class="peer-toggle peer-toggle--disabled">
+              <span>Peer disabled</span>
+              <q-toggle
+                  v-model="peerDisabled"
+                  color="primary"
+                  :disable="changingPeerStatus"
+                  @update:model-value="changePeerStatus"
+              />
+            </div>
           </div>
           <q-btn color="dark" icon="delete_forever" @click="deletePeer">
             Delete WireGuard Peer
@@ -95,10 +106,12 @@ import axios from 'axios'
 
 export default {
   components: {PeerTrafficChart, QrcodeVue},
-  emits: ['deletePeer', 'doubleVpn', 'peer-renamed'],
+  emits: ['deletePeer', 'doubleVpn', 'peer-renamed', 'peer-status-changed'],
   props: ['peerConfig', 'peerDetails'],
   data: () => ({
     doubleVpn: false,
+    peerDisabled: false,
+    changingPeerStatus: false,
     editingName: false,
     editedName: '',
     savingName: false
@@ -179,10 +192,40 @@ export default {
     },
     changeDoubleVpn() {
       this.$emit('doubleVpn', this.peerDetails, this.doubleVpn)
+    },
+    async changePeerStatus(disabled) {
+      this.changingPeerStatus = true
+      try {
+        const response = await axios.post('/api/v1/set-peer-status', {
+          ...this.peerDetails,
+          disabled
+        })
+        this.store.updatePeers(response.data)
+        const updatedPeer = response.data.find(peer => peer.id === this.peerDetails.id)
+        if (updatedPeer) {
+          this.peerDisabled = Boolean(updatedPeer.disabled)
+          this.$emit('peer-status-changed', updatedPeer)
+        }
+        this.$q.notify({
+          message: disabled ? 'Peer disabled' : 'Peer enabled',
+          type: 'positive',
+          position: 'top-right'
+        })
+      } catch (error) {
+        this.peerDisabled = Boolean(this.peerDetails.disabled)
+        this.$q.notify({
+          message: error.response?.data?.error || 'Unable to change peer status',
+          type: 'negative',
+          position: 'top-right'
+        })
+      } finally {
+        this.changingPeerStatus = false
+      }
     }
   },
   created() {
     this.doubleVpn = this.peerDetails.doubleVpn
+    this.peerDisabled = Boolean(this.peerDetails.disabled)
     this.editedName = this.peerDetails.name || ''
   },
   setup() {
@@ -288,11 +331,30 @@ export default {
   margin-top: 12px;
 }
 
-.double-vpn {
+.peer-toggle-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.peer-toggle-row--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.peer-toggle {
   min-height: 44px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  color: #444;
+}
+
+.peer-toggle--disabled {
+  background: #f5f5f5;
 }
 
 @media (max-width: 700px) {
@@ -305,6 +367,10 @@ export default {
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
     padding: 12px 16px 20px;
+  }
+
+  .peer-toggle-row {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 </style>
